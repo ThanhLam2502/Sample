@@ -1,0 +1,99 @@
+<div class="full-container-wrapper">
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+        <app-search-form [request]="filterBoat"
+                         (onFilterAction)="onSearchBoat($event)">
+        </app-search-form>
+        <dx-button icon="plus"
+                   type="default"
+                   (onClick)="createBoat()" [text]="'New User'">
+        </dx-button>
+    </div>
+
+    <div class="grid-wrapper auto-fill-content">
+        <dx-load-panel *ngIf="isProcessing"
+                       [visible]="true" [showPane]="false">
+        </dx-load-panel>
+        <dx-data-grid class="h-100"
+                      [dataSource]="dataSource"
+                      [columnHidingEnabled]="false"
+                      [showBorders]="true"
+                      [showRowLines]="true"
+                      [hoverStateEnabled]="true">
+            <dxo-paging [pageSize]="20"></dxo-paging>
+            <dxo-pager [showInfo]="true"
+                       [showPageSizeSelector]="false"
+                       [allowedPageSizes]="[20,50,100]"
+                       [showNavigationButtons]="true">
+            </dxo-pager>
+            <dxo-filter-row [visible]="true"
+                            applyFilter="auto">
+            </dxo-filter-row>
+            <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
+            <dxi-column [minWidth]="100" [caption]="'Boat ID'" [fixed]="true"
+                        alignment="center" dataField="boatId" dataType="string" fixedPosition="left">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'Boat name'"
+                        alignment="left" dataField="boatName" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'Driver ID'"
+                        alignment="left" dataField="driverId" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'Driver name'"
+                        alignment="left" dataField="driverName" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Driver contact info'"
+                        alignment="center" dataField="driverContactInfo" dataType="number">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Organizer ID'"
+                        alignment="center" dataField="organizerId" dataType="number">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'Organizer name'"
+                        alignment="center" dataField="organizerName" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'Owner ID'"
+                        alignment="center" dataField="ownerId" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Owner Name'"
+                        alignment="left" dataField="ownerName" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Region'"
+                        alignment="left" dataField="region" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Departing harbor 1'"
+                        alignment="left" dataField="departingHarbor1" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Departing harbor 2'"
+                        alignment="left" dataField="departingHarbor2" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Price package number'"
+                        alignment="left" dataField="pricePackageNumber" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Trip category'"
+                        alignment="left" dataField="tripCategory" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Destination'"
+                        alignment="left" dataField="destination" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Note'"
+                        alignment="left" dataField="note" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="100" [fixed]="true"
+                        alignment="center" cellTemplate="actionsCellTemplate" fixedPosition="right"
+                        [caption]="'Action'">
+                <div *dxTemplate="let cell of 'actionsCellTemplate'">
+                    <div class="action-inline">
+                        <i class="fas fa-pencil-alt edit-icon cursor-pointer" title="'Edit'"
+                           (click)="onBoatDetail(cell.data)"></i>
+                        <i class="far fa-trash-alt delete-icon ml-2 cursor-pointer" title="'Delete'"
+                           (click)="onDeleteBoat(cell.data.id, $event)"></i>
+                    </div>
+                </div>
+            </dxi-column>
+        </dx-data-grid>
+    </div>
+</div>
+
+<app-popover-confirm-box #deleteDetailConfirmPopover
+                         [message]="'Are you sure to delete?'"
+                         (onConfirm)="deleteBoat()">
+</app-popover-confirm-box>

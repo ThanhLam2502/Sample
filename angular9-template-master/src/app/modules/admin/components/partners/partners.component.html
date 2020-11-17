@@ -1,0 +1,87 @@
+<div class="full-container-wrapper">
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+        <app-search-form [request]="filterPartner"
+                         (onFilterAction)="onSearchPartner($event)">
+        </app-search-form>
+        <dx-button icon="plus"
+                   type="default"
+                   (onClick)="createPartner()" [text]="'New User'">
+        </dx-button>
+    </div>
+
+    <div class="grid-wrapper auto-fill-content">
+        <dx-load-panel *ngIf="isProcessing"
+                       [visible]="true" [showPane]="false">
+        </dx-load-panel>
+        <dx-data-grid class="h-100"
+                      [dataSource]="dataSource"
+                      [columnHidingEnabled]="false"
+                      [showBorders]="true"
+                      [showRowLines]="true"
+                      [hoverStateEnabled]="true">
+            <dxo-paging [pageSize]="20"></dxo-paging>
+            <dxo-pager [showInfo]="true"
+                       [showPageSizeSelector]="false"
+                       [allowedPageSizes]="[20,50,100]"
+                       [showNavigationButtons]="true">
+            </dxo-pager>
+            <dxo-filter-row [visible]="true"
+                            applyFilter="auto">
+            </dxo-filter-row>
+            <dxo-remote-operations [filtering]="true" [sorting]="true" [paging]="true"></dxo-remote-operations>
+            <dxi-column [minWidth]="100" [caption]="'User ID'" [fixed]="true"
+                        alignment="center" dataField="userID" dataType="string" fixedPosition="left">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'First name'"
+                        alignment="left" dataField="firstName" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'Middle name'"
+                        alignment="left" dataField="middleName" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'Last name'"
+                        alignment="left" dataField="lastName" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Phone number'"
+                        alignment="center" dataField="phoneNumber" dataType="number">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Whatsapp'"
+                        alignment="center" dataField="whatsapp" dataType="number">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'Role'"
+                        alignment="center" dataField="role" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="200" [caption]="'Region'"
+                        alignment="center" dataField="region" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Harbor'"
+                        alignment="left" dataField="harbor" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="150" [caption]="'Preferred way of contact'"
+                        alignment="left" dataField="preferredWayOfContact" dataType="string">
+            </dxi-column>
+            <dxi-column [minWidth]="100" [fixed]="true"
+                        alignment="center" cellTemplate="actionsCellTemplate" fixedPosition="right"
+                        [caption]="'Action'">
+                <div *dxTemplate="let cell of 'actionsCellTemplate'">
+                    <div class="action-inline">
+                        <i class="fas fa-pencil-alt edit-icon cursor-pointer" title="'Edit'"
+                           (click)="onPartnerDetail(cell.data)"></i>
+                        <i class="far fa-trash-alt delete-icon ml-2 cursor-pointer" title="'Delete'"
+                           (click)="onDeletePartner(cell.data.id, $event)"></i>
+                    </div>
+                </div>
+            </dxi-column>
+        </dx-data-grid>
+    </div>
+</div>
+<ng-container *ngIf="isOpenPartnerDetailPopup">
+    <app-partners-detail
+        [(visible)]="isOpenPartnerDetailPopup"
+        [selectedPartner]="dataPartner"
+        (onSuccess)="onUpdatePartnerSuccess($event)">
+    </app-partners-detail>
+</ng-container>
+<app-popover-confirm-box #deleteDetailConfirmPopover
+                         [message]="'Are you sure to delete?'"
+                         (onConfirm)="deletePartner()">
+</app-popover-confirm-box>

@@ -1,0 +1,70 @@
+<div id="kanban">
+  <dx-scroll-view
+      class="scrollable-board h-100"
+      direction="horizontal"
+      showScrollbar="always">
+      <dx-sortable
+        class="sortable-lists"
+        itemOrientation="horizontal"
+        handle=".list-title"
+        (onReorder)="onListReorder($event)">
+        <div class="list" *ngFor="let list of project.tasks; let listIndex = index">
+          <div class="list-title dx-theme-text-color">{{ list.name }}</div>
+          <dx-scroll-view
+            class="scrollable-list"
+            direction="vertical"
+            showScrollbar="always">
+            <dx-sortable
+                class="sortable-cards"
+                group="cardsGroup"
+                handle=".can-drag"
+                [data]="list"
+                (onDragStart)="onTaskDragStart($event)"
+                (onReorder)="onTaskDrop($event)"
+                (onAdd)="onTaskDrop($event)"
+                >
+                <div class="card can-drag dx-card dx-theme-text-color dx-theme-background-color"
+                  *ngFor="let task of list.task"
+                  >
+                    <div class="card-subject">{{ task.name }}</div>
+                    <div class="card-assignee">{{ task.description }}</div>
+                </div>
+                <div id="addTask" class="card dx-card dx-theme-text-color dx-theme-background-color" (click)="isPopupAddTaskVisible = true">
+                    <div class="card-assignee">Add a task...</div>
+                </div>
+              </dx-sortable>
+          </dx-scroll-view>
+        </div>
+
+        <div class="list" >
+          <div class="list-add-title dx-theme-text-color">Add List...</div>
+        </div>
+      </dx-sortable>
+  </dx-scroll-view>
+</div>
+
+<dx-popup
+class="addTask"
+  title="Add Task"
+  [(visible)]="isPopupAddTaskVisible">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view
+      direction="vertical"
+      [useNative]="true"
+      class=""
+      >
+      <div class="header">
+        <dx-text-box
+          value="task.name"
+          placeholder="Task Title"
+        >
+        </dx-text-box>
+      </div>
+      <div class="container">
+        body
+      </div>
+
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+

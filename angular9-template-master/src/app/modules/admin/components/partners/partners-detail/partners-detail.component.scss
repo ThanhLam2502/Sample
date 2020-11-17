@@ -1,0 +1,74 @@
+@import "mixins";
+@import 'variables';
+
+$text-history-color: #333;
+
+.step-wrapper {
+	::ng-deep .popup-footer-wrapper {
+		margin: 0 auto;
+		padding: 10px 0;
+		background: white;
+
+		.action-group:last-child {
+			padding-top: 15px;
+		}
+	}
+}
+
+::ng-deep .specific-step-wrapper {
+	 .money {
+		min-width: 180px;
+	}
+
+	.total-amount {
+		>div {
+			line-height: 36px;
+		}
+	}
+}
+
+.order-history {
+	height: 400px;
+}
+
+#openHistoryBtn {
+	padding: 0 5px;
+	margin-left: 30px;
+
+	.open-history-button {
+		display: flex;
+		text-align: center;
+		height: 100%;
+		width: 100%;
+		align-items: center;
+		justify-content: center;
+
+		.open-history-icon {
+			font-size: 1.3em;
+		}
+	}
+}
+
+.open-history-wrapper:hover {
+	@include shadow($card-shadow);
+}
+
+@include media-breakpoint-up(lg) {
+	::ng-deep .specific-step-wrapper {
+		.return-money {
+			min-width: 180px;
+		}
+	}
+
+	::ng-deep .popup-footer-wrapper {
+		.action-group:last-child {
+			padding-top: 0px;
+		}
+	}
+}
+
+@include media-breakpoint-up(xl) {
+	.order-history {
+		height: inherit;
+	}
+}
