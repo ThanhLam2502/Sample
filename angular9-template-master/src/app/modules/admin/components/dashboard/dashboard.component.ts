@@ -64,8 +64,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getProjects(): void {
-    this.pmServive.getProjects()
-      .subscribe(item => this.projects = item);
+    this.pmServive.getProjects().subscribe(
+      item => this.projects = item);
   }
 
   getUsers(): void {

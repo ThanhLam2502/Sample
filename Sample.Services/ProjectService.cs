@@ -24,11 +24,10 @@ namespace Sample.Services
 
         public async Task<int> DeleteProject(int id)
         {
-            var repos = _unitOfWork.Repository<Project>();
-            var project = await repos.FindAsync(id);
+            var project = await Repository.FindAsync(id);
             if (project != null)
             {
-                repos.Delete(id);
+                Repository.Delete(id);
                 return 1;
             }
             return -1;
@@ -36,8 +35,8 @@ namespace Sample.Services
 
         public async Task<List<ProjectTaskViewModel>> GetProjects()
         {
-            var repos = _unitOfWork.Repository<Project>();
-            return await repos.GetProjects();
+            var projects = await Repository.GetProjects();
+            return projects;
         }
 
         public async Task<int> InsertProject(ProjectTaskViewModel data)

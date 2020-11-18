@@ -4,6 +4,7 @@ export interface Project {
   startDate: Date;
   endDate: Date;
   status: number;
+  statusProjectString: string;
   assignTo: number;
   tasks: ListTasks[];
 }
@@ -21,6 +22,7 @@ export interface Task {
   description: string;
   attachFiles: string;
   status: number;
+  statusTaskString: string;
   listTaskId: number;
 }
 

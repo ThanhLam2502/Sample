@@ -88,12 +88,19 @@
 ::ng-deep .dx-sortable {
   display: block;
 }
-
-.addTask {
-  background-color: #f4f5f7;
-
+.add-task-title {
+  font-weight: 700;
+  color: #2171c1;
+  font-size: 14px;
 }
-// .dx-scrollable-content .dx-scrollview-content {
-//   height: calc(100vh - 151px);
-//   position: static;
-// }
+
+.add-to-task-button {
+  width: 100%;
+  border-radius: 2px;
+  margin-bottom: 6px;
+  text-align: left;
+}
+.dx-button-has-text .dx-button-content {
+  padding: 7px 18px 8px;
+}
+

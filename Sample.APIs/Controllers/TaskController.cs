@@ -17,7 +17,7 @@ namespace Sample.APIs.Controllers
             _taskService = taskService;
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> PutTask([FromBody] TaskViewModel task)
         {
             return Ok(new
@@ -25,7 +25,6 @@ namespace Sample.APIs.Controllers
                 message = Messages.ItemUpdated
             });
         }
-
 
     }
 }
