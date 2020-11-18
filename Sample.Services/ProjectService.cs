@@ -39,21 +39,15 @@ namespace Sample.Services
             return projects;
         }
 
-        public async Task<int> InsertProject(ProjectTaskViewModel data)
+        public async Task InsertProject(ProjectTaskViewModel data)
         {
-            var repos = _unitOfWork.Repository<Project>();
-
             var project = _mapper.Map<Project>(data);
-            await repos.InsertAsync(project);
-
-            return await _unitOfWork.SaveChangesAsync();
+            await Repository.InsertAsync(project);
         }
 
         public async Task<int> UpdateProject(ProjectTaskViewModel data)
         {
-            var repos = _unitOfWork.Repository<Project>();
-
-            var project = repos.Find(data.Id);
+            var project = Repository.Find(data.Id);
             if (project != null)
             {
                 //project = _mapper.Map<Project>(data);

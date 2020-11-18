@@ -1,21 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.Generic;
+using Sample.Entities.Utilities;
 
 namespace Sample.Entities.ViewModels
 {
-    public enum StatusProject : int
-    {
-        Open = 0,
-        Close,
-    }
-    public enum StatusTask{
-      
-        [Description("Not Started")] NotStarted =0,
-        [Description("In Progress")] InProgress,
-        [Description("Completed")] Completed,
-        [Description("Closed")] Closed
-    }
+
 
     public class ProjectTaskViewModel
     {
@@ -24,7 +14,7 @@ namespace Sample.Entities.ViewModels
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? Status { get; set; }
-        public string StatusProjectString => ((StatusProject)Status).ToString();
+        public string StatusProjectString => ((StatusProject)Status).GetDescription();
         public int? AssignTo { get; set; }
         public IEnumerable<ListTaskViewModel> Tasks { get; set; }
     }
@@ -43,7 +33,7 @@ namespace Sample.Entities.ViewModels
         public string Description { get; set; }
         public string AttachFiles { get; set; }
         public int? Status { get; set; }
-        public string StatusTaskString => ((StatusTask)Status).ToString();
+        public string StatusTaskString => ((StatusTask)Status).GetDescription();
         public int? ListTaskId { get; set; }
     }
 }

@@ -16,14 +16,43 @@ namespace Sample.APIs.Controllers
         {
             _taskService = taskService;
         }
-
+        // POST api/tasks
         [HttpPost]
-        public async Task<IActionResult> PutTask([FromBody] TaskViewModel task)
+        public async Task AddListTask([FromBody] ListTaskViewModel listTaskViewModel)
         {
-            return Ok(new
-            {
-                message = Messages.ItemUpdated
-            });
+            await _taskService.InsertListTask(listTaskViewModel);
+        }
+        // PUT api/tasks/5
+        [HttpPut("{id:int}")]
+        public async Task UpdateListTask([FromBody] ListTaskViewModel listTaskViewModel)
+        {
+            await _taskService.UpdateListTask(listTaskViewModel);
+        }
+        // DELETE api/tasks/3
+        [HttpDelete("{id:int}")]
+        public void DeleteListTask(int id)
+        {
+            _taskService.DeleteListTask(id);
+        }
+
+        // POST api/tasks/5/task
+        [HttpPost("{id:int}")]
+        public async Task AddTask([FromBody] TaskViewModel taskViewModel)
+        {
+            await _taskService.InsertTask(taskViewModel);
+        }
+
+        // PUT api/tasks/5/task/2
+        [HttpPut("{id:int}")]
+        public async Task UpdateTask([FromBody] TaskViewModel taskViewModel)
+        {
+            await _taskService.UpdateTask(taskViewModel);
+        }
+        // DELETE api/tasks/3/task/2
+        [HttpDelete("{id:int}")]
+        public void DeleteTask(int id)
+        {
+            _taskService.DeleteTask(id);
         }
 
     }

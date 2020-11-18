@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DevExpress.Xpo" Version="20.1.7" />
     <PackageReference Include="DevExtreme.AspNet.Data" Version="1.2.7" />
     <PackageReference Include="DevExtreme.AspNet.TagHelpers" Version="15.2.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
@@ -16,7 +17,6 @@
   <ItemGroup>
     <Folder Include="Models\Partials\" />
     <Folder Include="UnitOfWork\" />
-    <Folder Include="Utilities\" />
   </ItemGroup>
 
   <ItemGroup>

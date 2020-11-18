@@ -38,7 +38,7 @@ namespace Sample.APIs.Controllers
         public async Task<IActionResult> AddProject([FromBody] ProjectTaskViewModel data)
         {
 
-            int insert = await _projectService.InsertProject(data);
+            await _projectService.InsertProject(data);
             return Ok(new
             {
                 message = Messages.ItemInserted,
@@ -48,7 +48,7 @@ namespace Sample.APIs.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> PutProject([FromBody] ProjectTaskViewModel data)
+        public async Task<IActionResult> UpdateProject([FromBody] ProjectTaskViewModel data)
         {
             int update = await _projectService.UpdateProject(data);
             if (update < 0)
@@ -62,7 +62,7 @@ namespace Sample.APIs.Controllers
 
         // DELETE api/projects/5
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteProject(int id)
         {
             int delete = await _projectService.DeleteProject(id);
             if (delete < 0)
