@@ -43,7 +43,7 @@ namespace Sample.Entities.ViewModels
         public string Description { get; set; }
         public string AttachFiles { get; set; }
         public int? Status { get; set; }
-        public string StatusTaskString => ((StatusTask)Status).GetEnumDescription().ToString();
+        public string StatusTaskString => ((StatusTask)Status).ToString();
         public int? ListTaskId { get; set; }
     }
 }
