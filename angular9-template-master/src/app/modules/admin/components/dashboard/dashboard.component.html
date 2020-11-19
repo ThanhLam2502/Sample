@@ -10,7 +10,10 @@
     <!-- END PROJECT TAB -->
     <!-- PROJECT CONTENT -->
     <ng-template matTabContent>
-      <app-tab-content [project]="item"></app-tab-content>
+      <app-tab-content
+      [project]="item"
+      (onSaved)="getProjects()">
+      ></app-tab-content>
     </ng-template>
     <!-- END PROJECT CONTENT -->
   </mat-tab>

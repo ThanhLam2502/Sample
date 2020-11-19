@@ -1,6 +1,6 @@
-import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { PmService } from '@app/modules/auth/services/pm.service';
-import { ListTasks, Project, Task } from '@app/modules/core/models/project';
+import { ListTaskViewModel, ProjectViewModel, TaskViewModel } from '@app/modules/core/models/project';
 import { DxValidationGroupComponent } from 'devextreme-angular';
 
 @Component({
@@ -10,13 +10,20 @@ import { DxValidationGroupComponent } from 'devextreme-angular';
 })
 export class TabContentComponent implements OnInit {
   @ViewChild('validationGroup', { static: false }) validationGroup: DxValidationGroupComponent;
-  @Input() project: Project;
-  task: Task = {} as Task;
+  @Input() project: ProjectViewModel;
+  @Output() onSaved = new EventEmitter<void>();
+
+  task: TaskViewModel;
+  checkBtn: any[];
+
+  txtAddList: string;
+  isEdit: boolean = false;
+  isDissableTextBox: boolean = true;
   isFullScreen: boolean = false;
-  popupAddTaskVisible: boolean = false;
+  popupTaskVisible: boolean = false;
   popupStatusVisible: boolean = false;
 
-  selectStatus = [];
+  selectStatus: number[];
   statusTask =
     [
       { id: 0, text: 'Not Started' },
@@ -41,15 +48,15 @@ export class TabContentComponent implements OnInit {
     }
   }
 
-  onListReorder(e) {
-    console.log(e);
-    const list = this.project.tasks.splice(e.fromIndex, 1)[0];
-    console.log(list);
-    this.project.tasks.splice(e.toIndex, 0, list);
+  // onListReorder(e) {
+  //   console.log(e);
+  //   const list = this.project.tasks.splice(e.fromIndex, 1)[0];
+  //   console.log(list);
+  //   this.project.tasks.splice(e.toIndex, 0, list);
 
-    // const status = this.statuses.splice(e.fromIndex, 1)[0];
-    // this.statuses.splice(e.toIndex, 0, status);
-  }
+  //   // const status = this.statuses.splice(e.fromIndex, 1)[0];
+  //   // this.statuses.splice(e.toIndex, 0, status);
+  // }
 
   onTaskDragStart(e) {
     e.itemData = e.fromData.task[e.fromIndex];
@@ -58,26 +65,62 @@ export class TabContentComponent implements OnInit {
   onTaskDrop(e) {
     e.fromData.task.splice(e.fromIndex, 1);
     e.toData.task.splice(e.toIndex, 0, e.itemData);
-    // if (e.fromData.name !== e.toData.name) {
-    //   this.pmServive.editTask(e.itemData, e.toData.id);
-    // }
-    // console.log(e);
-    // console.log(this.project.tasks);
-  }
-  showPopupAddVisisble(listTasks: ListTasks) {
-    console.log(listTasks);
-    this.task.listTaskId = listTasks.id;
-    this.popupAddTaskVisible = true;
+
+    if (e.fromData.name !== e.toData.name) {
+      this.task = e.itemData;
+      this.task.listTaskId = e.toData.id;
+      this.editTask(this.task);
+    }
   }
 
-  addTask(e) {
-    this.task.status = this.selectStatus.length === 0 ? 0 : this.selectStatus[0].id;
+  onClickEditTask(task: TaskViewModel) {
+    this.isEdit = true;
+
+    this.task = task;
+    this.selectStatus = [task.status];
+
+    this.popupTaskVisible = true;
+  }
+
+  onClickAddTask(listTasks: ListTaskViewModel) {
+    this.isEdit = false;
+
+    this.task = new TaskViewModel();
+    this.task.listTaskId = listTasks.id;
+    this.selectStatus = [0];
+
+    this.popupTaskVisible = true;
+  }
+
+  onClickAddList(e) {
+    this.isDissableTextBox = false;
+  }
+
+  submitTask(e) {
     if (!this.validationGroup.instance.validate().isValid) {
       return false;
     }
-    console.log(this.task);
-    console.log(this.task.listTaskId);
-    console.log(this.project.tasks);
-    console.log(this.project.tasks.filter(x => x.id === 2)[0].task.push(this.task));
+    this.task.status = this.selectStatus[0];
+    if (this.isEdit) {
+      this.editTask(this.task);
+    } else {
+      this.addTask(this.task);
+    }
+  }
+
+  addTask(task: TaskViewModel): void {
+    this.pmServive.addTask(task).subscribe(
+      _ => {
+        this.popupTaskVisible = false;
+        this.onSaved.emit();
+      }
+    );
+  }
+  editTask(task: TaskViewModel): void {
+    this.pmServive.editTask(task).subscribe(
+      _ => {
+        this.popupTaskVisible = false;
+      }
+    );
   }
 }

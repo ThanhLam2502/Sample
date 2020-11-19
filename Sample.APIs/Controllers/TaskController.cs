@@ -24,9 +24,9 @@ namespace Sample.APIs.Controllers
         }
         // PUT api/tasks/5
         [HttpPut("{id:int}")]
-        public async Task UpdateListTask([FromBody] ListTaskViewModel listTaskViewModel)
+        public async Task UpdateListTask([FromBody] ListTaskViewModel listTaskViewModel, int id)
         {
-            await _taskService.UpdateListTask(listTaskViewModel);
+            await _taskService.UpdateListTask(listTaskViewModel, id);
         }
         // DELETE api/tasks/3
         [HttpDelete("{id:int}")]
@@ -35,21 +35,21 @@ namespace Sample.APIs.Controllers
             _taskService.DeleteListTask(id);
         }
 
-        // POST api/tasks/5/task
-        [HttpPost("{id:int}")]
+        // POST api/tasks/task
+        [HttpPost("task")]
         public async Task AddTask([FromBody] TaskViewModel taskViewModel)
         {
             await _taskService.InsertTask(taskViewModel);
         }
 
         // PUT api/tasks/5/task/2
-        [HttpPut("{id:int}")]
-        public async Task UpdateTask([FromBody] TaskViewModel taskViewModel)
+        [HttpPut("task/{id:int}")]
+        public async Task UpdateTask([FromBody] TaskViewModel taskViewModel, int id)
         {
-            await _taskService.UpdateTask(taskViewModel);
+            await _taskService.UpdateTask(taskViewModel, id);
         }
-        // DELETE api/tasks/3/task/2
-        [HttpDelete("{id:int}")]
+        // DELETE api/tasks/task/2
+        [HttpDelete("task/{id:int}")]
         public void DeleteTask(int id)
         {
             _taskService.DeleteTask(id);

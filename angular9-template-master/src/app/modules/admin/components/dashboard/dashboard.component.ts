@@ -2,8 +2,8 @@ import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
 import { PmService } from '@app/modules/auth/services/pm.service';
-import { Project } from '@app/modules/core/models/project';
-import { User } from '@app/modules/core/models/user';
+import { ProjectViewModel } from '@app/modules/core/models/project';
+import { UserViewModel } from '@app/modules/core/models/user';
 import { DxFormComponent } from 'devextreme-angular/ui/form';
 import notify from 'devextreme/ui/notify';
 
@@ -15,9 +15,10 @@ import notify from 'devextreme/ui/notify';
 })
 
 export class DashboardComponent implements OnInit {
-  users: User[];
-  project: Project = {} as Project;
-  projects: Project[] = [];
+  project: ProjectViewModel = new ProjectViewModel();
+
+  users: UserViewModel[] = [];
+  projects: ProjectViewModel[] = [];
   tabIndex: number = 2;
 
   popupDropdownVisible: boolean;
@@ -109,7 +110,7 @@ export class DashboardComponent implements OnInit {
     e.preventDefault();
   }
 
-  addProject(project: Project): void {
+  addProject(project: ProjectViewModel): void {
     this.pmServive.addProject(project).subscribe(
       _ => {
         this.getProjects();
@@ -148,9 +149,9 @@ export class DashboardComponent implements OnInit {
 
   editProject(e) {
     this.project = { ...e.oldData, ...e.newData };
-    this.updateProject(this.project as Project);
+    this.updateProject(this.project);
   }
-  updateProject(project: Project): void {
+  updateProject(project: ProjectViewModel): void {
     this.pmServive.updateProject(project).subscribe(
       _ => {
         this.popupDropdownVisible = false;

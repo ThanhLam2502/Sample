@@ -1,4 +1,4 @@
-export interface Project {
+export class ProjectViewModel {
   id: number;
   name: string;
   startDate: Date;
@@ -6,17 +6,17 @@ export interface Project {
   status: number;
   statusProjectString: string;
   assignTo: number;
-  tasks: ListTasks[];
+  tasks: Array<ListTaskViewModel>;
 }
 
-export interface ListTasks {
+export class ListTaskViewModel {
   id: number;
   name: string;
   projectId: number;
-  task: Task[];
+  task: Array<TaskViewModel>;
 }
 
-export interface Task {
+export class TaskViewModel {
   id: number;
   name: string;
   description: string;

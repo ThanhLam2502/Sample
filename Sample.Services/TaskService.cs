@@ -30,9 +30,9 @@ namespace Sample.Services
             await Repository.InsertAsync(task);
         }
 
-        public async Task UpdateTask(TaskViewModel taskViewModel)
+        public async Task UpdateTask(TaskViewModel taskViewModel, int id)
         {
-            var task = await Repository.FindAsync(taskViewModel.Id);
+            var task = await Repository.FindAsync(id);
             if (task != null)
             {
                 task.Name = taskViewModel.Name;
@@ -56,10 +56,10 @@ namespace Sample.Services
             await repos.InsertAsync(listTask);
         }
 
-        public async Task UpdateListTask(ListTaskViewModel listTaskViewModel)
+        public async Task UpdateListTask(ListTaskViewModel listTaskViewModel, int id)
         {
             var repos = _unitOfWork.Repository<ListTask>();
-            var listTask = await repos.FindAsync(listTaskViewModel.Id);
+            var listTask = await repos.FindAsync(id);
             if (listTask != null)
             {
                 listTask.Name = listTaskViewModel.Name;

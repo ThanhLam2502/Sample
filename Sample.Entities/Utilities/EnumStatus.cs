@@ -4,11 +4,6 @@ using DevExpress.Xpo;
 
 namespace Sample.Entities.Utilities
 {
-
-    public static class EnumStatus 
-    {
-       
-    }
     public enum StatusProject : int
     {
         [Description("Open")] Open = 0,
