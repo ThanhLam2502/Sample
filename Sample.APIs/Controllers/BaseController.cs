@@ -17,6 +17,7 @@ namespace Sample.APIs.Controllers
         public BaseController(IBaseService<TEntity> baseService)
         {
             _baseService = baseService;
+
         }
 
         /// <summary>

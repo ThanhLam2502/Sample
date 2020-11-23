@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ProjectViewModel, TaskViewModel } from '@app/modules/core/models/project';
+import { ListTaskViewModel, ProjectViewModel, TaskViewModel } from '@app/modules/core/models/project';
 import { UserViewModel } from '@app/modules/core/models/user';
 import { ApiService } from '@app/modules/core/services';
 import { Observable } from 'rxjs';
@@ -15,7 +15,6 @@ export class PmService {
 
   constructor(
     private apiService: ApiService,
-    private httpClient: HttpClient,
   ) { }
 
   getProjects(): Observable<ProjectViewModel[]> {
@@ -47,6 +46,15 @@ export class PmService {
   editTask(task: TaskViewModel): Observable<TaskViewModel> {
     const url = `${this.taskUrl}/task/${task.id}`;
     return this.apiService.update(url, task);
+  }
+
+  addListTask(listTask: ListTaskViewModel): Observable<ListTaskViewModel> {
+    return this.apiService.post(this.taskUrl, listTask);
+  }
+
+  editListTask(listTask: ListTaskViewModel): Observable<ListTaskViewModel> {
+    const url = `${this.taskUrl}/${listTask.id}`;
+    return this.apiService.update(url, listTask);
   }
 
 }

@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
   popupAddVisible: boolean;
   isCollapsed: boolean;
 
+  isVissibleDropDown: boolean = false;
 
   lookupData =
     [
@@ -43,7 +44,7 @@ export class DashboardComponent implements OnInit {
     };
 
   @ViewChild(DxFormComponent) form: DxFormComponent;
-  @ViewChild('navTab', {static: false}) tab: MatTabGroup;
+  @ViewChild('navTab', { static: false }) tab: MatTabGroup;
 
   constructor(
     private pmServive: PmService,
@@ -74,6 +75,9 @@ export class DashboardComponent implements OnInit {
       .subscribe(item => this.users = item);
   }
 
+  callFunction() {
+    this.isVissibleDropDown = true;
+  }
   dblSelectTabs(e) {
     this.tabIndex = e.rowIndex;
     this.popupDropdownVisible = false;
@@ -92,7 +96,7 @@ export class DashboardComponent implements OnInit {
     e.stopPropagation();
   }
 
-  toggleListProject(e) {
+  dropdownListProject(e) {
     this.popupDropdownVisible = !this.popupDropdownVisible;
     e.stopPropagation();
   }

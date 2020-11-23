@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Sample.Core.Http;
 using Sample.Entities.Models;
 using Sample.Entities.Services;
 using Sample.Entities.UnitOfWork;
@@ -33,7 +34,7 @@ namespace Sample.Services
             return -1;
         }
 
-        public async Task<List<ProjectTaskViewModel>> GetProjects()
+        public async Task<HttpResponse<List<ProjectTaskViewModel>>> GetProjects()
         {
             var projects = await Repository.GetProjects();
             return projects;

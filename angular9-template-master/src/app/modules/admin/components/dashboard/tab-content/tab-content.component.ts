@@ -1,7 +1,7 @@
-import { Component, HostListener, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, HostListener, Input, OnInit, Output, ViewChild, EventEmitter, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { PmService } from '@app/modules/auth/services/pm.service';
 import { ListTaskViewModel, ProjectViewModel, TaskViewModel } from '@app/modules/core/models/project';
-import { DxValidationGroupComponent } from 'devextreme-angular';
+import { DxTextBoxComponent, DxValidationGroupComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-tab-content',
@@ -9,19 +9,24 @@ import { DxValidationGroupComponent } from 'devextreme-angular';
   styleUrls: ['./tab-content.component.scss']
 })
 export class TabContentComponent implements OnInit {
+  @ViewChild('nameInput') nameInput: ElementRef;
+  @ViewChild('inputTodo') inputTodo: ElementRef;
+  @ViewChild('addLstInput', { static: false }) addLstInput: DxTextBoxComponent;
   @ViewChild('validationGroup', { static: false }) validationGroup: DxValidationGroupComponent;
+
   @Input() project: ProjectViewModel;
   @Output() onSaved = new EventEmitter<void>();
 
   task: TaskViewModel;
-  checkBtn: any[];
+  lstTask: ListTaskViewModel;
 
-  txtAddList: string;
   isEdit: boolean = false;
-  isDissableTextBox: boolean = true;
   isFullScreen: boolean = false;
+  isHidenTextBox: boolean = true;
+
   popupTaskVisible: boolean = false;
-  popupStatusVisible: boolean = false;
+  popoverStatusVisible: boolean = false;
+  popoverTodoVisible: boolean = false;
 
   selectStatus: number[];
   statusTask =
@@ -33,6 +38,7 @@ export class TabContentComponent implements OnInit {
     ];
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private pmServive: PmService,
   ) { }
 
@@ -73,6 +79,42 @@ export class TabContentComponent implements OnInit {
     }
   }
 
+  onClickAddList(e) {
+    this.isHidenTextBox = false;
+  }
+  onSave(e) {
+    e.stopPropagation();
+    this.isHidenTextBox = true;
+
+    this.lstTask = new ListTaskViewModel();
+    this.lstTask.name = this.addLstInput.value;
+    this.lstTask.projectId = this.project.id;
+
+    this.pmServive.addListTask(this.lstTask).subscribe(
+      _ => {
+        this.addLstInput.value = '';
+        this.onSaved.emit();
+      }
+    );
+  }
+
+  onClickEditLstTaskName(listTaskEdit: ListTaskViewModel): void {
+    this.lstTask = listTaskEdit;
+    this.cdRef.detectChanges();
+    this.nameInput.nativeElement.focus();
+  }
+  onBlurEditLstTask(e): void {
+    if (this.lstTask.name === this.nameInput.nativeElement.value) {
+      delete this.lstTask;
+      return;
+    }
+    this.lstTask.name = this.nameInput.nativeElement.value;
+    this.pmServive.editListTask(this.lstTask).subscribe(
+      _ => { delete this.lstTask; }
+    );
+  }
+
+
   onClickEditTask(task: TaskViewModel) {
     this.isEdit = true;
 
@@ -90,10 +132,6 @@ export class TabContentComponent implements OnInit {
     this.selectStatus = [0];
 
     this.popupTaskVisible = true;
-  }
-
-  onClickAddList(e) {
-    this.isDissableTextBox = false;
   }
 
   submitTask(e) {
@@ -120,7 +158,14 @@ export class TabContentComponent implements OnInit {
     this.pmServive.editTask(task).subscribe(
       _ => {
         this.popupTaskVisible = false;
+        task.statusTaskString = this.statusTask[this.selectStatus[0]].text;
       }
     );
+  }
+
+  onSubmitTodo(inputValue: string): void {
+    this.popoverTodoVisible = false;
+    console.log(inputValue);
+    this.inputTodo.nativeElement.value = '';
   }
 }

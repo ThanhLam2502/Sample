@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sample.Core.Http;
 using Sample.Entities.Models;
 using Sample.Entities.Repositories;
 using Sample.Entities.ViewModels;
@@ -10,9 +11,9 @@ namespace Sample.Repositories.Repostitory
 {
     public static class ProjectRepository
     {
-        public static async Task<List<ProjectTaskViewModel>> GetProjects(this IRepository<Project> repository)
+        public static async Task<HttpResponse<List<ProjectTaskViewModel>>> GetProjects(this IRepository<Project> repository)
         {
-            var query = repository.Entities.Select(p => new ProjectTaskViewModel
+            var query = await repository.Entities.Select(p => new ProjectTaskViewModel
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -35,8 +36,8 @@ namespace Sample.Repositories.Repostitory
                         ListTaskId = t.ListTaskId,
                     })
                 })
-            });
-            return await query.ToListAsync();
+            }).ToListAsync();
+            return HttpResponse<List<ProjectTaskViewModel>>.OK(query,"aaaa");
         }
     }
 }

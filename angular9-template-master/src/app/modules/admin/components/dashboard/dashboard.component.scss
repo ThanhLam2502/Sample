@@ -7,19 +7,19 @@
   outline: none;
   background: transparent;
 }
-// ::ng-deep
-//   mat-tab-group
-//   mat-tab-header
-//   .mat-tab-label-container
-//   .mat-tab-list
-//   .mat-tab-labels
-//   :last-child.mat-tab-label {
-//   min-width: 0;
-//   margin-top: 3px;
-//   padding: 0px 0px;
-//   color: unset;
-//   opacity: unset;
-// }
+::ng-deep
+  mat-tab-group
+  mat-tab-header
+  .mat-tab-label-container
+  .mat-tab-list
+  .mat-tab-labels
+  :last-child.mat-tab-label {
+  min-width: 0;
+  margin-top: 3px;
+  padding: 0px 0px;
+  color: unset;
+  opacity: unset;
+}
 
 .tilte-popover {
   color: #007bff;
@@ -59,7 +59,3 @@
   height: calc(100vh - 120px);
 }
 
-.btn-dropdown {
-  float: right;
-  margin-right: -74px;
-}

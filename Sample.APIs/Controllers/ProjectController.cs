@@ -1,37 +1,28 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Sample.Entities.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sample.Entities.Resources;
 using Sample.Entities.Services;
-using Sample.Entities.Utilities;
 using Sample.Entities.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Sample.APIs.Controllers
 {
     [Route("api/projects")]
     [ApiController]
-    public class ProjectController : ControllerBase
+    public class ProjectController : BaseApiController
     {
         private readonly IProjectService _projectService;
 
-        public ProjectController( IProjectService projectService)
+        public ProjectController(IProjectService projectService)
         {
             _projectService = projectService;
         }
 
         // GET: api/projects
         [HttpGet]
-        public IActionResult GetProjects()
+        public async Task<IActionResult> GetProjects()
         {
-            var _listProject = _projectService.GetProjects();
-            return Ok(_listProject.Result);
+            var response = await _projectService.GetProjects();
+            return StatusCode(response);
         }
 
         [HttpPost]
