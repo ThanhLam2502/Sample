@@ -13,31 +13,48 @@ namespace Sample.Repositories.Repostitory
     {
         public static async Task<HttpResponse<List<ProjectTaskViewModel>>> GetProjects(this IRepository<Project> repository)
         {
-            var query = await repository.Entities.Select(p => new ProjectTaskViewModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                StartDate = p.StartDate,
-                EndDate = p.EndDate,
-                Status = p.Status,
-                AssignTo = p.AssignTo,
-                Tasks = p.ListTask.Select(ls => new ListTaskViewModel
+            var query = await repository.Entities
+                .Where(project => project.IsDeleted != true)
+                .Select(project => new ProjectTaskViewModel
                 {
-                    Id = ls.Id,
-                    Name = ls.Name,
-                    ProjectId = ls.ProjectId,
-                    Task = ls.ProjectTask.Select(t => new TaskViewModel
+                    Id = project.Id,
+                    Name = project.Name,
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate,
+                    Status = project.Status,
+                    AssignTo = project.AssignTo,
+                    Tasks = project.ListTask.Select(lstask => new ListTaskViewModel
                     {
-                        Id = t.Id,
-                        Name = t.Name,
-                        Description = t.Description,
-                        AttachFiles = t.AttachFiles,
-                        Status = t.Status,
-                        ListTaskId = t.ListTaskId,
+                        Id = lstask.Id,
+                        Name = lstask.Name,
+                        ProjectId = lstask.ProjectId,
+                        Task = lstask.TaskProject.Select(task => new TaskViewModel
+                        {
+                            Id = task.Id,
+                            Name = task.Name,
+                            Description = task.Description,
+                            AttachFiles = task.AttachFiles,
+                            Status = task.Status,
+                            ListTaskId = task.ListTaskId,
+                            Todos = task.ListTodo
+                            .Where(todos => todos.IsDeleted != true)
+                            .Select(todos => new ListTodoViewModel
+                            {
+                                Id = todos.Id,
+                                Name = todos.Name,
+                                TaskId = todos.TaskId,
+                                Todo = todos.Todo.Select(todo => new TodoViewModel
+                                {
+                                    Id = todo.Id,
+                                    Name = todo.Name,
+                                    IsComplete = todo.IsComplete,
+                                    ListTodoId = todo.ListTodoId,
+                                })
+                            })
+                        })
                     })
-                })
-            }).ToListAsync();
-            return HttpResponse<List<ProjectTaskViewModel>>.OK(query,"aaaa");
+                }).ToListAsync();
+            return HttpResponse<List<ProjectTaskViewModel>>.OK(query);
         }
     }
 }

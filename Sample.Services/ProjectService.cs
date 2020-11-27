@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Sample.Core.Http;
 using Sample.Entities.Models;
+using Sample.Entities.Resources;
 using Sample.Entities.Services;
 using Sample.Entities.UnitOfWork;
 using Sample.Entities.ViewModels;
@@ -23,46 +24,52 @@ namespace Sample.Services
             _mapper = mapper;
         }
 
-        public async Task<int> DeleteProject(int id)
-        {
-            var project = await Repository.FindAsync(id);
-            if (project != null)
-            {
-                Repository.Delete(id);
-                return 1;
-            }
-            return -1;
-        }
-
         public async Task<HttpResponse<List<ProjectTaskViewModel>>> GetProjects()
         {
             var projects = await Repository.GetProjects();
             return projects;
         }
 
-        public async Task InsertProject(ProjectTaskViewModel data)
+        public async Task<HttpResponse<int>> InsertProject(ProjectTaskViewModel model)
         {
-            var project = _mapper.Map<Project>(data);
+            var project = _mapper.Map<Project>(model);
             await Repository.InsertAsync(project);
+            return HttpResponse<int>.OK(project.Id, Messages.ItemInserted);
         }
 
-        public async Task<int> UpdateProject(ProjectTaskViewModel data)
+        public async Task<HttpResponse<int>> DeleteProject(int id)
         {
-            var project = Repository.Find(data.Id);
-            if (project != null)
-            {
-                //project = _mapper.Map<Project>(data);
-                //repos.Update(project);
-                project.Name = data.Name;
-                project.StartDate = data.StartDate;
-                project.EndDate = data.EndDate;
-                project.AssignTo = data.AssignTo;
-                project.Status = data.Status;
-                await _unitOfWork.SaveChangesAsync();
+            var project = await Repository.FindAsync(id);
+            if (project == null)
+                return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.NoContent);
 
-                return 1;
-            }
-            return -1;
+            project.IsDeleted = true;
+            var saved = await _unitOfWork.SaveChangesAsync();
+            if (saved > 0)
+                return HttpResponse<int>.OK(id, Messages.ItemDeleted);
+
+            return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
+
+        }
+
+        public async Task<HttpResponse<int>> UpdateProject(ProjectTaskViewModel model)
+        {
+            var project = await Repository.FindAsync(model.Id);
+            if (project == null)
+                return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.NoContent);
+
+            project.Name = model.Name;
+            project.StartDate = model.StartDate;
+            project.EndDate = model.EndDate;
+            project.AssignTo = model.AssignTo;
+            project.Status = model.Status;
+
+            int saved = await _unitOfWork.SaveChangesAsync();
+
+            if (saved > 0)
+                return HttpResponse<int>.OK(project.Id, Messages.ItemUpdated);
+
+            return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
     }
 }

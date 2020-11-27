@@ -8,7 +8,5 @@ namespace Sample.Entities.Services
 {
     public interface IUserService : IBaseService<User>
     {
-
-
     }
 }

@@ -17,9 +17,11 @@ namespace Sample.Entities.Models
 
         public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<ListTask> ListTask { get; set; }
+        public virtual DbSet<ListTodo> ListTodo { get; set; }
         public virtual DbSet<Project> Project { get; set; }
-        public virtual DbSet<ProjectTask> ProjectTask { get; set; }
+        public virtual DbSet<TaskProject> TaskProject { get; set; }
         public virtual DbSet<TaskUser> TaskUser { get; set; }
+        public virtual DbSet<Todo> Todo { get; set; }
         public virtual DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -43,7 +45,7 @@ namespace Sample.Entities.Models
                     .HasColumnName("Comment")
                     .HasColumnType("ntext");
 
-                entity.Property(e => e.ParentCommentId).HasColumnName("ParentCommentID");
+                entity.Property(e => e.ParentId).HasColumnName("ParentID");
 
                 entity.Property(e => e.TaskId).HasColumnName("TaskID");
 
@@ -52,7 +54,7 @@ namespace Sample.Entities.Models
                 entity.HasOne(d => d.Task)
                     .WithMany(p => p.Comment)
                     .HasForeignKey(d => d.TaskId)
-                    .HasConstraintName("FK_Comment_TaskUser");
+                    .HasConstraintName("FK_Comment_ProjectTask");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Comment)
@@ -74,9 +76,27 @@ namespace Sample.Entities.Models
                     .HasConstraintName("FK_ListTask_Project");
             });
 
+            modelBuilder.Entity<ListTodo>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.TaskId).HasColumnName("TaskID");
+
+                entity.HasOne(d => d.Task)
+                    .WithMany(p => p.ListTodo)
+                    .HasForeignKey(d => d.TaskId)
+                    .HasConstraintName("FK_ListTodo_ProjectTask");
+            });
+
             modelBuilder.Entity<Project>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 
@@ -86,7 +106,7 @@ namespace Sample.Entities.Models
                     .HasConstraintName("FK_Project_User");
             });
 
-            modelBuilder.Entity<ProjectTask>(entity =>
+            modelBuilder.Entity<TaskProject>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -99,7 +119,7 @@ namespace Sample.Entities.Models
                 entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.HasOne(d => d.ListTask)
-                    .WithMany(p => p.ProjectTask)
+                    .WithMany(p => p.TaskProject)
                     .HasForeignKey(d => d.ListTaskId)
                     .HasConstraintName("FK_TaskP_ListTask");
             });
@@ -123,6 +143,20 @@ namespace Sample.Entities.Models
                     .WithMany(p => p.TaskUser)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK_TaskUser_User");
+            });
+
+            modelBuilder.Entity<Todo>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ListTodoId).HasColumnName("ListTodoID");
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.HasOne(d => d.ListTodo)
+                    .WithMany(p => p.Todo)
+                    .HasForeignKey(d => d.ListTodoId)
+                    .HasConstraintName("FK_Todo_ListTodo");
             });
 
             modelBuilder.Entity<User>(entity =>

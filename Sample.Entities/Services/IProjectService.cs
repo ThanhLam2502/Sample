@@ -11,8 +11,8 @@ namespace Sample.Entities.Services
     public interface IProjectService : IBaseService<Project>
     {
         Task<HttpResponse<List<ProjectTaskViewModel>>> GetProjects();
-        Task InsertProject(ProjectTaskViewModel data);
-        Task<int> UpdateProject(ProjectTaskViewModel data);
-        Task<int> DeleteProject(int id);
+        Task<HttpResponse<int>> InsertProject(ProjectTaskViewModel model);
+        Task<HttpResponse<int>> UpdateProject(ProjectTaskViewModel model);
+        Task<HttpResponse<int>> DeleteProject(int id);
     }
 }

@@ -26,42 +26,26 @@ namespace Sample.APIs.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProject([FromBody] ProjectTaskViewModel data)
+        public async Task<IActionResult> InsertProject([FromBody] ProjectTaskViewModel model)
         {
-
-            await _projectService.InsertProject(data);
-            return Ok(new
-            {
-                message = Messages.ItemInserted,
-                data
-            });
+            var response = await _projectService.InsertProject(model);
+            return StatusCode(response);
         }
 
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProject([FromBody] ProjectTaskViewModel data)
+        public async Task<IActionResult> UpdateProject([FromBody] ProjectTaskViewModel model)
         {
-            int update = await _projectService.UpdateProject(data);
-            if (update < 0)
-                return NoContent();
-            return Ok(new
-            {
-                message = Messages.ItemUpdated,
-                data,
-            });
+            var response = await _projectService.UpdateProject(model);
+            return StatusCode(response);
         }
 
         // DELETE api/projects/5
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteProject(int id)
+        public async Task<IActionResult> DeleteProjectAsync(int id)
         {
-            int delete = await _projectService.DeleteProject(id);
-            if (delete < 0)
-                return NoContent();
-            return Ok(new
-            {
-                message = Messages.ItemDeleted
-            });
+            var response = await _projectService.DeleteProject(id);
+            return StatusCode(response);
         }
 
     }

@@ -23,6 +23,9 @@ import { ScheduleComponent } from './components/schedule/schedule.component';
 import { UsersComponent } from './components/users/users.component';
 import { TabContentComponent } from './components/dashboard/tab-content/tab-content.component';
 import { DxScrollViewModule, DxSortableModule } from 'devextreme-angular';
+import { TaskMenuComponent } from './components/dashboard/tab-content/task-menu/task-menu.component';
+import { ConfirmBoxComponent } from './components/dashboard/tab-content/confirm-box/confirm-box.component';
+import { WriteCommentComponent } from './components/dashboard/tab-content/write-comment/write-comment.component';
 
 
 const PROVIDERS = [
@@ -102,7 +105,10 @@ const PROVIDERS = [
     BookingDetailComponent,
     PartnersDetailComponent,
     SearchFormComponent,
-    TabContentComponent
+    TabContentComponent,
+    TaskMenuComponent,
+    ConfirmBoxComponent,
+    WriteCommentComponent
   ],
   providers: [
     ...PROVIDERS

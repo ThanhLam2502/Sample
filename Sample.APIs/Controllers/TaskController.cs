@@ -8,7 +8,7 @@ namespace Sample.APIs.Controllers
 {
     [Route("api/tasks")]
     [ApiController]
-    public class TaskController : ControllerBase
+    public class TaskController : BaseApiController
     {
         private readonly ITaskService _taskService;
 
@@ -16,43 +16,50 @@ namespace Sample.APIs.Controllers
         {
             _taskService = taskService;
         }
+
         // POST api/tasks
         [HttpPost]
-        public async Task AddListTask([FromBody] ListTaskViewModel listTaskViewModel)
+        public async Task<IActionResult> InsertListTask([FromBody] ListTaskViewModel model)
         {
-            await _taskService.InsertListTask(listTaskViewModel);
+            var response = await _taskService.InsertListTask(model);
+            return StatusCode(response);
         }
         // PUT api/tasks/5
         [HttpPut("{id:int}")]
-        public async Task UpdateListTask([FromBody] ListTaskViewModel listTaskViewModel, int id)
+        public async Task<IActionResult> UpdateListTask([FromBody] ListTaskViewModel model, int id)
         {
-            await _taskService.UpdateListTask(listTaskViewModel, id);
+            var response = await _taskService.UpdateListTask(model, id);
+            return StatusCode(response);
         }
         // DELETE api/tasks/3
         [HttpDelete("{id:int}")]
-        public void DeleteListTask(int id)
+        public IActionResult DeleteListTask(int id)
         {
-            _taskService.DeleteListTask(id);
+            var response = _taskService.DeleteListTask(id);
+            return StatusCode(response);
         }
 
         // POST api/tasks/task
         [HttpPost("task")]
-        public async Task AddTask([FromBody] TaskViewModel taskViewModel)
+        public async Task<IActionResult> InsertTask([FromBody] TaskViewModel model)
         {
-            await _taskService.InsertTask(taskViewModel);
+            var response = await _taskService.InsertTask(model);
+            return StatusCode(response);
         }
 
-        // PUT api/tasks/5/task/2
+        // PUT api/tasks/task/2
         [HttpPut("task/{id:int}")]
-        public async Task UpdateTask([FromBody] TaskViewModel taskViewModel, int id)
+        public async Task<IActionResult> UpdateTask([FromBody] TaskViewModel model, int id)
         {
-            await _taskService.UpdateTask(taskViewModel, id);
+            var response = await _taskService.UpdateTask(model, id);
+            return StatusCode(response);
         }
         // DELETE api/tasks/task/2
         [HttpDelete("task/{id:int}")]
-        public void DeleteTask(int id)
+        public IActionResult DeleteTask(int id)
         {
-            _taskService.DeleteTask(id);
+            var response = _taskService.DeleteTask(id);
+            return StatusCode(response);
         }
 
     }

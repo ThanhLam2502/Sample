@@ -7,6 +7,8 @@ namespace Sample.Entities.Models
     {
         public ProjectTask()
         {
+            Comment = new HashSet<Comment>();
+            ListTodo = new HashSet<ListTodo>();
             TaskUser = new HashSet<TaskUser>();
         }
 
@@ -18,6 +20,8 @@ namespace Sample.Entities.Models
         public int? ListTaskId { get; set; }
 
         public virtual ListTask ListTask { get; set; }
+        public virtual ICollection<Comment> Comment { get; set; }
+        public virtual ICollection<ListTodo> ListTodo { get; set; }
         public virtual ICollection<TaskUser> TaskUser { get; set; }
     }
 }

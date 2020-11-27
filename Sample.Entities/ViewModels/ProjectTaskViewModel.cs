@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Collections.Generic;
 using Sample.Entities.Utilities;
 
@@ -35,5 +36,22 @@ namespace Sample.Entities.ViewModels
         public int? Status { get; set; }
         public string StatusTaskString => ((StatusTask)Status).GetDescription();
         public int? ListTaskId { get; set; }
+        public IEnumerable<ListTodoViewModel> Todos { get; set; }
+    }
+    public class ListTodoViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Percent => (Todo.Count() == 0 ? 0 : Math.Round((decimal)(Todo?.Count(_ => _.IsComplete == true) * 100 / Todo?.Count()), 0, MidpointRounding.AwayFromZero));
+        public int? TaskId { get; set; }
+        public IEnumerable<TodoViewModel> Todo { get; set; }
+    }
+    public class TodoViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool? IsComplete { get; set; }
+        public int? ListTodoId { get; set; }
+
     }
 }

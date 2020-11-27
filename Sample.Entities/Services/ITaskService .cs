@@ -1,5 +1,6 @@
 ﻿
 
+using Sample.Core.Http;
 using Sample.Entities.Models;
 using Sample.Entities.ViewModels;
 using System.Collections.Generic;
@@ -9,11 +10,11 @@ namespace Sample.Entities.Services
 {
     public interface ITaskService : IBaseService<ProjectTask>
     {
-        Task InsertTask(TaskViewModel taskViewModel);
-        Task UpdateTask(TaskViewModel taskViewModel, int id);
-        void DeleteTask(int id);
-        Task InsertListTask(ListTaskViewModel listTaskViewModel);
-        Task UpdateListTask(ListTaskViewModel listTaskViewModel, int id);
-        void DeleteListTask(int id);
+        Task<HttpResponse<int>> InsertTask(TaskViewModel model);
+        Task<HttpResponse<int>> UpdateTask(TaskViewModel model, int id);
+        HttpResponse<int> DeleteTask(int id);
+        Task<HttpResponse<int>> InsertListTask(ListTaskViewModel model);
+        Task<HttpResponse<int>> UpdateListTask(ListTaskViewModel model, int id);
+        HttpResponse<int> DeleteListTask(int id);
     }
 }

@@ -8,7 +8,7 @@ namespace Sample.APIs.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseApiController
     {
         private readonly IUserService _userService;
 
@@ -19,7 +19,7 @@ namespace Sample.APIs.Controllers
 
         // GET: api/user
         [HttpGet]
-        public async Task<IEnumerable<User>> GetProjects()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _userService.GetAllAsync();
         }

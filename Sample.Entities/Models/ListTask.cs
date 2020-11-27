@@ -7,7 +7,7 @@ namespace Sample.Entities.Models
     {
         public ListTask()
         {
-            ProjectTask = new HashSet<ProjectTask>();
+            TaskProject = new HashSet<TaskProject>();
         }
 
         public int Id { get; set; }
@@ -15,6 +15,6 @@ namespace Sample.Entities.Models
         public int? ProjectId { get; set; }
 
         public virtual Project Project { get; set; }
-        public virtual ICollection<ProjectTask> ProjectTask { get; set; }
+        public virtual ICollection<TaskProject> TaskProject { get; set; }
     }
 }

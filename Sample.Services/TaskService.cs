@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DevExtreme.AspNet.Data;
+using Sample.Core.Http;
 using Sample.Entities.Models;
+using Sample.Entities.Resources;
 using Sample.Entities.Services;
 using Sample.Entities.UnitOfWork;
 using Sample.Entities.ViewModels;
@@ -24,54 +26,69 @@ namespace Sample.Services
             _mapper = mapper;
         }
 
-        public async Task InsertTask(TaskViewModel taskViewModel)
+        public async Task<HttpResponse<int>> InsertTask(TaskViewModel model)
         {
-            var task = _mapper.Map<ProjectTask>(taskViewModel);
+            var task = _mapper.Map<ProjectTask>(model);
             await Repository.InsertAsync(task);
+            return HttpResponse<int>.OK(task.Id, Messages.ItemInserted);
         }
 
-        public async Task UpdateTask(TaskViewModel taskViewModel, int id)
+        public async Task<HttpResponse<int>> UpdateTask(TaskViewModel model, int id)
         {
             var task = await Repository.FindAsync(id);
-            if (task != null)
-            {
-                task.Name = taskViewModel.Name;
-                task.Description = taskViewModel.Description;
-                task.AttachFiles = taskViewModel.AttachFiles;
-                task.Status = taskViewModel.Status;
-                task.ListTaskId = taskViewModel.ListTaskId;
-                await _unitOfWork.SaveChangesAsync();
-            }
+            if (task == null)
+                return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.NoContent);
+
+            task.Name = model.Name;
+            task.Description = model.Description;
+            task.AttachFiles = model.AttachFiles;
+            task.Status = model.Status;
+            task.ListTaskId = model.ListTaskId;
+
+            int saved = await _unitOfWork.SaveChangesAsync();
+
+            if (saved > 0)
+                return HttpResponse<int>.OK(task.Id, Messages.ItemUpdated);
+
+            return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
 
-        public void DeleteTask(int id)
+        public HttpResponse<int> DeleteTask(int id)
         {
             Repository.Delete(id);
+            return HttpResponse<int>.OK(id, Messages.ItemDeleted);
         }
 
-        public async Task InsertListTask(ListTaskViewModel listTaskViewModel)
+        public async Task<HttpResponse<int>> InsertListTask(ListTaskViewModel model)
         {
-            var listTask = _mapper.Map<ListTask>(listTaskViewModel);
             var repos = _unitOfWork.Repository<ListTask>();
+            var listTask = _mapper.Map<ListTask>(model);
             await repos.InsertAsync(listTask);
+            return HttpResponse<int>.OK(listTask.Id, Messages.ItemInserted);
         }
 
-        public async Task UpdateListTask(ListTaskViewModel listTaskViewModel, int id)
+        public async Task<HttpResponse<int>> UpdateListTask(ListTaskViewModel model, int id)
         {
             var repos = _unitOfWork.Repository<ListTask>();
             var listTask = await repos.FindAsync(id);
-            if (listTask != null)
-            {
-                listTask.Name = listTaskViewModel.Name;
-                listTask.ProjectId = listTaskViewModel.ProjectId;
-                await _unitOfWork.SaveChangesAsync();
-            }
+            if (listTask == null)
+                return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.NoContent);
+
+            listTask.Name = model.Name;
+            listTask.ProjectId = model.ProjectId;
+            int saved = await _unitOfWork.SaveChangesAsync();
+
+            if (saved > 0)
+                return HttpResponse<int>.OK(listTask.Id, Messages.ItemUpdated);
+
+            return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
 
-        public void DeleteListTask(int id)
+        public HttpResponse<int> DeleteListTask(int id)
         {
             var repos = _unitOfWork.Repository<ListTask>();
             repos.Delete(id);
+            return HttpResponse<int>.OK(id, Messages.ItemDeleted);
         }
     }
 }

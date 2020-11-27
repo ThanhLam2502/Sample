@@ -48,7 +48,7 @@ export function accessTokenGetter() {
     NgbModule
   ],
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   providers: [
     {

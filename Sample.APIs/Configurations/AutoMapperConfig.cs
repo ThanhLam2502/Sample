@@ -11,6 +11,8 @@ namespace Sample.APIs.Configurations
             CreateMap<ProjectTaskViewModel, Project>().ReverseMap();
             CreateMap<ListTaskViewModel, ListTask>().ReverseMap();
             CreateMap<TaskViewModel, ProjectTask>().ReverseMap();
+            CreateMap<ListTodoViewModel, ListTodo>().ReverseMap();
+            CreateMap<TodoViewModel, Todo>().ReverseMap();
         }
 
     }
