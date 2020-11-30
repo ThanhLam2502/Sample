@@ -15,7 +15,7 @@ namespace Sample.Repositories.Repostitory
         public static async Task<HttpResponse<List<CommentViewModel>>> GetCommentByTaskID(this IRepository<Comment> repository, int taskId)
         {
             var query = await repository.Entities
-                .Where(cmt => cmt.TaskId == taskId)
+                .Where(cmt => cmt.TaskId == taskId && cmt.ParentId == null && cmt.IsDeleted != true)
                .Select(cmt => new CommentViewModel
                {
                    Id = cmt.Id,
@@ -25,7 +25,9 @@ namespace Sample.Repositories.Repostitory
                    Img = cmt.User.Img,
                    TaskId = cmt.TaskId,
                    ParentId = cmt.ParentId,
-                   InverseParent = cmt.InverseParent.Select(cm => new CommentViewModel
+                   InverseParent = cmt.InverseParent
+                   .Where(cm => cm.IsDeleted != true)
+                   .Select(cm => new CommentViewModel
                    {
                        Id = cm.Id,
                        Cmt = cm.Cmt,

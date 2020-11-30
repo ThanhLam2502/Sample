@@ -66,9 +66,9 @@ namespace Sample.APIs.Controllers
 
         // DELETE api/todos/todo/2
         [HttpDelete("todo/{id:int}")]
-        public IActionResult DeleteTodo(int id)
+        public async Task<IActionResult> DeleteTodo(int id)
         {
-            var response = _todoService.DeleteTodo(id);
+            var response = await _todoService.DeleteTodo(id);
             return StatusCode(response);
         }
 

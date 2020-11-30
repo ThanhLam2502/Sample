@@ -115,4 +115,8 @@ export class PmService {
     const url = `${this.commentUrl}/${comment.id}`;
     return this.apiService.update(url, comment);
   }
+  delComment(id: number): Observable<BaseResponse<number>> {
+    const url = `${this.commentUrl}/${id}`;
+    return this.apiService.delete(url);
+  }
 }

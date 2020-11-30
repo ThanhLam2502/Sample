@@ -30,8 +30,7 @@ namespace Sample.APIs.Controllers
         {
             var response = await _commentService.GetCommentByTaskID(id);
             return StatusCode(response);
-        }
-        
+        }     
 
         [HttpPost]
         public async Task<IActionResult> InsertComment([FromBody] CommentViewModel model)
@@ -47,11 +46,11 @@ namespace Sample.APIs.Controllers
             return StatusCode(response);
         }
 
-        //[HttpDelete("{id:int}")]
-        //public IActionResult DeleteListTask(int id)
-        //{
-        //    var response = _taskService.DeleteListTask(id);
-        //    return StatusCode(response);
-        //}
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var response = await _commentService.DeleteComment(id);
+            return StatusCode(response);
+        }
     }
 }

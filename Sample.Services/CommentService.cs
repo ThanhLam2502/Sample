@@ -62,5 +62,19 @@ namespace Sample.Services
 
             return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
+
+        public async Task<HttpResponse<int>> DeleteComment(int id)
+        {
+            var comment = await Repository.FindAsync(id);
+            if (comment == null)
+                return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.NoContent);
+
+            comment.IsDeleted = true;
+            var saved = await _unitOfWork.SaveChangesAsync();
+            if (saved > 0)
+                return HttpResponse<int>.OK(id, Messages.ItemDeleted);
+
+            return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
+        }
     }
 }

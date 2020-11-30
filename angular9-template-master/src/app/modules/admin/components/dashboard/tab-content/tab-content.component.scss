@@ -274,15 +274,23 @@
     font-family: ui-monospace;
     font-weight: bold;
   }
+  ::ng-deep .ng-star-inserted p{
+    margin-bottom: 0px;
+  }
   .user-comment {
-    padding: 8px 8px 2px;
+    padding: 8px 8px 2px 0px;
     margin-left: 1.5rem;
-    padding-right: 2rem;
     width: 100%;
 
     &:hover {
       background-color: whitesmoke;
     }
+  }
+  .task-comment-collapse {
+    margin-left: 1.5rem;
+    color: cadetblue;
+    font-family: -webkit-body;
+    padding: 8px 0px;
   }
   .small-link {
     margin: 0 2rem;
@@ -310,3 +318,8 @@
     align-items: center;
   }
 }
+
+// ::ng-deep .mat-typography p{
+//   margin-bottom: 0px;
+//   background-color: blue;
+// }

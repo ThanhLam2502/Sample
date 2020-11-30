@@ -80,7 +80,8 @@
                   <div class="member">
                     <p><b>Member: </b></p>
                     <div class="member-img ml-3">
-                        <img [src]="member.img" [width]="24" [height]="24" alt="img" class="border-radius-50 ml-1" *ngFor="let member of taskItem.members">
+                      <img [src]="member.img" [width]="24" [height]="24" alt="img" class="border-radius-50 ml-1"
+                        *ngFor="let member of taskItem.members">
                     </div>
                   </div>
                   <p><b>Description</b></p>
@@ -198,43 +199,60 @@
                 </div>
 
                 <div class="task-comment">
-                  <div class="show-comment ml-0 pt-2" *ngFor="let comment of taskItem.comments">
-                    <div class="flex-center">
-                      <img [src]="comment.img" [width]="24" [height]="24" alt="img" class="border-radius-50 mr-1">
-                      <div class="name-user">{{ comment.userName }}</div>
-                    </div>
-                    <div class="user-comment" *ngIf="!comment.isEdit" [innerHTML]="comment.cmt"></div>
-                    <h5 class="small-link">
-                      <span class="link-click" (click)="onClickRepComment(comment)">Reply</span>
-                      <span class="link-click" (click)="comment.isEdit = true">Edit</span>
-                      <span class="link-click">Delete</span>
-                    </h5>
-                    <div class="user-comment" *ngIf="comment.isEdit">
-                      <app-write-comment [comment]="comment" (onCommentChange)="editComment($event)">
-                      </app-write-comment>
-                    </div>
-
-                    <div class="show-comment" *ngFor="let repCmt of comment.inverseParent">
+                  <ng-container *ngFor="let comment of taskItem.comments">
+                    <div class="show-comment ml-0 pt-2">
                       <div class="flex-center">
-                        <img [src]="repCmt.img" [width]="24" [height]="24" alt="img" class="border-radius-50 mr-1">
-                        <div class="name-user">{{ repCmt.userName }}</div>
+                        <img [src]="comment.img" [width]="24" [height]="24" alt="img" class="border-radius-50 mr-1">
+                        <div class="name-user">{{ comment.userName }}</div>
                       </div>
-                      <div class="user-comment" [innerHTML]="repCmt.cmt"></div>
+                      <div class="user-comment mb-0" *ngIf="!comment.isEdit" [innerHtml]="comment.cmt">
+                      </div>
                       <h5 class="small-link">
-                        <span class="link-click" (click)="repCmt.isEdit = true">Edit</span>
-                        <span class="link-click">Delete</span>
+                        <span class="link-click" (click)="onClickRepComment(comment)">Reply</span>
+                        <span class="link-click" (click)="comment.isEdit = true">Edit</span>
+                        <span class="link-click" (click)="onClickDelCmt($event, comment)">Delete</span>
                       </h5>
-                      <div class="user-comment" *ngIf="repCmt.isEdit">
-                        <app-write-comment [comment]="repCmt" (onCommentChange)="editComment($event)">
+                      <div class="user-comment" *ngIf="comment.isEdit">
+                        <app-write-comment [comment]="comment" (onCommentChange)="editComment($event)">
                         </app-write-comment>
                       </div>
-                    </div>
 
-                    <div class="user-comment" *ngIf="comment?.isRep">
-                      <app-write-comment [comment]="commentItem" (onCommentChange)="addRepComment($event)">
-                      </app-write-comment>
+                      <div *ngIf="comment.inverseParent.length">
+                        <div class="task-comment-collapse" (click)="comment.isCollapsed = !comment.isCollapsed"
+                          *ngIf="!comment.isCollapsed">
+                          {{ comment.inverseParent.length }} replies
+                        </div>
+                        <div class="task-comment-collapse" (click)="comment.isCollapsed = !comment.isCollapsed"
+                          *ngIf="comment.isCollapsed">
+                          Hide {{ comment.inverseParent.length }} replies
+                        </div>
+
+                        <div [ngbCollapse]="!comment.isCollapsed">
+                          <div class="show-comment" *ngFor="let repCmt of comment.inverseParent">
+                            <div class="flex-center">
+                              <img [src]="repCmt.img" [width]="24" [height]="24" alt="img"
+                                class="border-radius-50 mr-1">
+                              <div class="name-user">{{ repCmt.userName }}</div>
+                            </div>
+                            <div class="user-comment" [innerHTML]="repCmt.cmt"></div>
+                            <h5 class="small-link">
+                              <span class="link-click" (click)="repCmt.isEdit = true">Edit</span>
+                              <span class="link-click" (click)="onClickDelCmt($event, repCmt)">Delete</span>
+                            </h5>
+                            <div class="user-comment" *ngIf="repCmt.isEdit">
+                              <app-write-comment [comment]="repCmt" (onCommentChange)="editComment($event)">
+                              </app-write-comment>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="user-comment" *ngIf="comment?.isRep">
+                          <app-write-comment [comment]="commentItem" (onCommentChange)="addRepComment($event)">
+                          </app-write-comment>
+                        </div>
+                      </div>
+
                     </div>
-                  </div>
+                  </ng-container>
                 </div>
 
               </div>
@@ -244,21 +262,17 @@
         <!-- End col-9 -->
         <!-- Col-3 -->
         <div class="col-md-3">
-          <app-task-menu [isEdit]="isEdit" [users]="users" [(task)]="taskItem"
-            (onSubmitedTask)="submitTask()" (addLstTodoTask)="addLstTodo($event)"></app-task-menu>
+          <app-task-menu [isEdit]="isEdit" [users]="users" [(task)]="taskItem" (onSubmitedTask)="submitTask()"
+            (addLstTodoTask)="addLstTodo($event)"></app-task-menu>
         </div>
-        <!-- <div class="col-md-3">
-          <app-task-menu [isEdit]="isEdit" [statusTask]="statusTask" [(selectStatus)]="selectStatus" [users]="users" [(task)]="taskItem"
-            (onSubmitedTask)="submitTask()" (addLstTodoTask)="addLstTodo($event)"></app-task-menu>
-        </div> -->
         <!-- End col-3 -->
       </div>
       <!-- End row 2 -->
     </div>
-    <!-- <div class="task-menu-md" [class.d-block]="isVisibleTaskMenu">
-      <app-task-menu [isEdit]="isEdit" [statusTask]="statusTask" [(selectStatus)]="selectStatus"
-        (onSubmitedTask)="submitTask()" (addLstTodoTask)="addLstTodo($event)"></app-task-menu>
-    </div> -->
+    <div class="task-menu-md" [class.d-block]="isVisibleTaskMenu">
+      <app-task-menu [isEdit]="isEdit" [users]="users" [(task)]="taskItem" (onSubmitedTask)="submitTask()"
+        (addLstTodoTask)="addLstTodo($event)"></app-task-menu>
+    </div>
   </div>
 </dx-popup>
 

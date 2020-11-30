@@ -21,20 +21,11 @@ export class TabContentComponent implements OnInit {
   //#region variable
   commentItem: CommentViewModel;
   taskItem: TaskViewModel;
-  selectModel: ListTodoViewModel | TodoViewModel;
+  selectModel: ListTodoViewModel | TodoViewModel | CommentViewModel;
 
   isEdit: boolean = false;
   isVidsibleAddNewCmt = false;
   isVisibleTaskMenu: boolean = false;
-
-  // selectStatus: number[];
-  // statusTask: object =
-  //   [
-  //     { id: 0, text: 'Not Started' },
-  //     { id: 1, text: 'In Progress' },
-  //     { id: 2, text: 'Completed' },
-  //     { id: 3, text: 'Closed' },
-  //   ];
   //#endregion
 
   constructor(
@@ -70,7 +61,6 @@ export class TabContentComponent implements OnInit {
     if (!this.validationGroup.instance.validate().isValid) {
       return false;
     }
-    // this.taskItem.status = this.selectStatus[0];
     if (this.isEdit) {
       this.editTask(this.taskItem);
     } else {
@@ -80,16 +70,14 @@ export class TabContentComponent implements OnInit {
 
   onClickEditTask(task: TaskViewModel) {
     this.isEdit = true;
-    // this.selectStatus = [task.status];
     // get Todo & todo item
-    this.pmServive.getTodosByTaskId(task.id).subscribe((item) =>{
+    this.pmServive.getTodosByTaskId(task.id).subscribe((item) => {
       task.todos = item.data;
     })
     // get comment in task
     this.pmServive.getCommentsByTaskId(task.id).subscribe((item) => {
       task.comments = item.data;
     });
-
     // get member in task
     this.pmServive.getUserByTaskId(task.id).subscribe((item) => {
       task.members = item.data;
@@ -100,10 +88,9 @@ export class TabContentComponent implements OnInit {
   }
 
   editTask(task: TaskViewModel): void {
+    console.log(this.taskItem);
     this.pmServive.editTask(task).subscribe(
       item => {
-        // task.statusTaskString = this.statusTask[this.selectStatus[0]].text;
-        // task.statusTaskString = this.statusTask[task.status].text;
         this.notification(item.message, 'success', 3000);
       }
     );
@@ -114,15 +101,14 @@ export class TabContentComponent implements OnInit {
     this.taskItem = new TaskViewModel({
       listTaskId: ltTaskId,
       todos: [],
+      status: 0,
     });
-    // this.selectStatus = [0];
     this.popupTask.instance.show();
   }
   addTask(task: TaskViewModel): void {
     this.pmServive.addTask(task).subscribe(
       item => {
         task.id = item.data;
-        // task.statusTaskString = this.statusTask[task.status].text;
         this.project.tasks.find(lt => lt.id === task.listTaskId).task.push(task);
 
         this.popupTask.instance.hide();
@@ -209,16 +195,23 @@ export class TabContentComponent implements OnInit {
     this.selectModel = new TodoViewModel(todo);
     this.confirmBox.show(e.currentTarget);
   }
+  onClickDelCmt(e, comment: CommentViewModel) {
+    this.selectModel = new CommentViewModel(comment);
+    this.confirmBox.show(e.currentTarget);
+  }
 
   onClickConfirm(e) {
     if (e === false)
       return;
-    const nameClass = this.selectModel.constructor.name; console.log(nameClass);
+    const nameClass = this.selectModel.constructor.name;
     if (nameClass === 'ListTodoViewModel') {
       this.deleteLstTodo(<ListTodoViewModel>this.selectModel);
     }
     if (nameClass === 'TodoViewModel') {
       this.deleteTodo(<TodoViewModel>this.selectModel);
+    }
+    if (nameClass === 'CommentViewModel') {
+      this.deleteComment(<CommentViewModel>this.selectModel);
     }
     this.confirmBox.hide();
   }
@@ -226,7 +219,7 @@ export class TabContentComponent implements OnInit {
   deleteLstTodo(lsTodo: ListTodoViewModel) {
     this.pmServive.delLstTodo(lsTodo.id).subscribe(
       item => {
-        this.taskItem.todos = this.taskItem.todos.filter(x => x.id !== item.data);
+        this.taskItem.todos = this.taskItem.todos.filter(lt => lt.id !== item.data);
         this.notification(item.message, 'success', 3000);
       }
     );
@@ -237,6 +230,19 @@ export class TabContentComponent implements OnInit {
         const lsTodo: ListTodoViewModel = this.taskItem.todos.find(t => t.id === todo.listTodoId);
         lsTodo.todo = lsTodo.todo.filter(x => x.id !== item.data);
         this.setPercent(lsTodo.id);
+        this.notification(item.message, 'success', 3000);
+      }
+    );
+  }
+  deleteComment(comment: CommentViewModel) {
+    this.pmServive.delComment(comment.id).subscribe(
+      item => {
+        if (comment.parentId === null)
+          this.taskItem.comments = this.taskItem.comments.filter(c => c.id !== item.data);
+        else {
+          const cmtDelParent = this.taskItem.comments.find(cmt => cmt.id === comment.parentId);
+          cmtDelParent.inverseParent = cmtDelParent.inverseParent.filter(c => c.id !== item.data);
+        }
         this.notification(item.message, 'success', 3000);
       }
     );

@@ -17,24 +17,13 @@ export class TaskMenuComponent implements OnInit {
   @Input() isEdit: boolean;
   @Input() users: UserViewModel[];
 
-  // @Input() statusTask: object;
-  // private _selectStatus: number[];
-  // @Input()
-  // get selectStatus(): number[] {
-  //   return this._selectStatus;
-  // }
-
-  // set selectStatus(value: number[]) {
-  //   this._selectStatus = value;
-  //   this.selectStatusChange.emit(value);
-  // }
-  selectUser: any = [];
   @ViewChild('popoverTodo', { static: true }) popoverTodo: DxPopoverComponent;
   @ViewChild('popoverStatus', { static: true }) popoverStatus: DxPopoverComponent;
   @ViewChild('popoverAssignMember', { static: true }) popoverAssignMember: DxPopoverComponent;
   @ViewChild('dxListMember', { static: false }) dxListMember: DxListComponent;
 
-  selectStatus: number[];
+  selectUser: any = [];
+  selectStatus: number[] = [];
   statusTask =
     [
       { id: 0, name: 'Not Started' },
@@ -45,10 +34,15 @@ export class TaskMenuComponent implements OnInit {
   constructor() {
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   submitTask(): void {
-    console.log(this.dxListMember.selectedItems);
+    // console.log(this.dxListMember.selectedItems);
+    const [status] = this.selectStatus;
+    if (status && this.task.status !== status){
+      this.task.status = status;
+    }
+    this.task.statusTaskString = this.statusTask[this.task.status].name;
     this.onSubmitedTask.emit();
   }
 
@@ -65,6 +59,7 @@ export class TaskMenuComponent implements OnInit {
   }
   showPopoverStatus(e) {
     this.popoverStatus.visible = !this.popoverStatus.visible;
+    this.selectStatus = [this.task.status];
     if (this.popoverStatus.visible) {
       this.popoverStatus.instance.show(e.toElement);
     }

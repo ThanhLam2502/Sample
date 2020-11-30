@@ -15,6 +15,7 @@ namespace Sample.Entities.Models
         public int? UserId { get; set; }
         public int? TaskId { get; set; }
         public int? ParentId { get; set; }
+        public bool? IsDeleted { get; set; }
 
         public virtual Comment Parent { get; set; }
         public virtual TaskProject Task { get; set; }

@@ -33,9 +33,9 @@ namespace Sample.APIs.Controllers
         }
         // DELETE api/tasks/3
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteListTask(int id)
+        public async Task<IActionResult> DeleteListTask(int id)
         {
-            var response = _taskService.DeleteListTask(id);
+            var response = await _taskService.DeleteListTask(id);
             return StatusCode(response);
         }
 
@@ -56,9 +56,9 @@ namespace Sample.APIs.Controllers
         }
         // DELETE api/tasks/task/2
         [HttpDelete("task/{id:int}")]
-        public IActionResult DeleteTask(int id)
+        public async Task<IActionResult> DeleteTask(int id)
         {
-            var response = _taskService.DeleteTask(id);
+            var response = await _taskService.DeleteTask(id);
             return StatusCode(response);
         }
 

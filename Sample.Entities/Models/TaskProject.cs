@@ -18,6 +18,7 @@ namespace Sample.Entities.Models
         public string AttachFiles { get; set; }
         public int? Status { get; set; }
         public int? ListTaskId { get; set; }
+        public bool? IsDeleted { get; set; }
 
         public virtual ListTask ListTask { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }

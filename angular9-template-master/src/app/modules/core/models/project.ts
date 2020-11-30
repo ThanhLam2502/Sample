@@ -91,6 +91,7 @@ export class CommentViewModel {
   inverseParent: CommentViewModel[];
   isEdit: boolean = false;
   isRep: boolean = false;
+  isCollapsed: boolean = false;
 
   constructor(init?: Partial<CommentViewModel>) {
     Object.assign(this, init);

@@ -23,12 +23,16 @@ namespace Sample.Repositories.Repostitory
                     EndDate = project.EndDate,
                     Status = project.Status,
                     AssignTo = project.AssignTo,
-                    Tasks = project.ListTask.Select(lstask => new ListTaskViewModel
+                    Tasks = project.ListTask
+                    .Where(lstask => lstask.IsDeleted != true)
+                    .Select(lstask => new ListTaskViewModel
                     {
                         Id = lstask.Id,
                         Name = lstask.Name,
                         ProjectId = lstask.ProjectId,
-                        Task = lstask.TaskProject.Select(task => new TaskViewModel
+                        Task = lstask.TaskProject
+                        .Where(task => task.IsDeleted != true)
+                        .Select(task => new TaskViewModel
                         {
                             Id = task.Id,
                             Name = task.Name,

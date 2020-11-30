@@ -43,6 +43,8 @@ namespace Sample.Entities.Models
 
                 entity.Property(e => e.Cmt).HasColumnType("ntext");
 
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.ParentId).HasColumnName("ParentID");
 
                 entity.Property(e => e.TaskId).HasColumnName("TaskID");
@@ -68,6 +70,8 @@ namespace Sample.Entities.Models
             modelBuilder.Entity<ListTask>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 
@@ -117,6 +121,8 @@ namespace Sample.Entities.Models
 
                 entity.Property(e => e.Description).HasColumnType("ntext");
 
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.ListTaskId).HasColumnName("ListTaskID");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
@@ -151,6 +157,8 @@ namespace Sample.Entities.Models
             modelBuilder.Entity<Todo>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IsDeleted).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.ListTodoId).HasColumnName("ListTodoID");
 

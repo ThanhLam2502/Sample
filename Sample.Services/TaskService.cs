@@ -47,16 +47,24 @@ namespace Sample.Services
 
             int saved = await _unitOfWork.SaveChangesAsync();
 
-            if (saved > 0)
+            if (saved >= 0)
                 return HttpResponse<int>.OK(task.Id, Messages.ItemUpdated);
 
             return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
 
-        public HttpResponse<int> DeleteTask(int id)
+        public async Task<HttpResponse<int>> DeleteTask(int id)
         {
-            Repository.Delete(id);
-            return HttpResponse<int>.OK(id, Messages.ItemDeleted);
+            var task = await Repository.FindAsync(id);
+            if (task == null)
+                return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.NoContent);
+
+            task.IsDeleted = true;
+            var saved = await _unitOfWork.SaveChangesAsync();
+            if (saved > 0)
+                return HttpResponse<int>.OK(id, Messages.ItemDeleted);
+
+            return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
 
         public async Task<HttpResponse<int>> InsertListTask(ListTaskViewModel model)
@@ -84,11 +92,19 @@ namespace Sample.Services
             return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
 
-        public HttpResponse<int> DeleteListTask(int id)
+        public async Task<HttpResponse<int>> DeleteListTask(int id) //aaa
         {
             var repos = _unitOfWork.Repository<ListTask>();
-            repos.Delete(id);
-            return HttpResponse<int>.OK(id, Messages.ItemDeleted);
+            var listTask = await repos.FindAsync(id);
+            if (listTask == null)
+                return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.NoContent);
+
+            listTask.IsDeleted = true;
+            var saved = await _unitOfWork.SaveChangesAsync();
+            if (saved > 0)
+                return HttpResponse<int>.OK(id, Messages.ItemDeleted);
+
+            return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
     }
 }

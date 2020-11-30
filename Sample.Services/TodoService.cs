@@ -51,10 +51,18 @@ namespace Sample.Services
 
         }
 
-        public HttpResponse<int> DeleteTodo(int id)
+        public async Task<HttpResponse<int>> DeleteTodo(int id)
         {
-            Repository.Delete(id);
-            return HttpResponse<int>.OK(id, Messages.ItemDeleted);
+            var todo = await Repository.FindAsync(id);
+            if (todo == null)
+                return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.NoContent);
+
+            todo.IsDeleted = true;
+            var saved = await _unitOfWork.SaveChangesAsync();
+            if (saved > 0)
+                return HttpResponse<int>.OK(id, Messages.ItemDeleted);
+
+            return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
 
 

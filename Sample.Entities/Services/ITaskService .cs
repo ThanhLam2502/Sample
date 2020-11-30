@@ -12,9 +12,9 @@ namespace Sample.Entities.Services
     {
         Task<HttpResponse<int>> InsertTask(TaskViewModel model);
         Task<HttpResponse<int>> UpdateTask(TaskViewModel model, int id);
-        HttpResponse<int> DeleteTask(int id);
+        Task<HttpResponse<int>> DeleteTask(int id);
         Task<HttpResponse<int>> InsertListTask(ListTaskViewModel model);
         Task<HttpResponse<int>> UpdateListTask(ListTaskViewModel model, int id);
-        HttpResponse<int> DeleteListTask(int id);
+        Task<HttpResponse<int>> DeleteListTask(int id);
     }
 }

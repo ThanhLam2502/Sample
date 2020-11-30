@@ -14,5 +14,6 @@ namespace Sample.Entities.Services
         Task<HttpResponse<IEnumerable<CommentViewModel>>> GetComments();
         Task<HttpResponse<int>> InsertComment(CommentViewModel model);
         Task<HttpResponse<int>> UpdateCmtContent(CommentViewModel model, int id);
+        Task<HttpResponse<int>> DeleteComment(int id);
     }
 }
