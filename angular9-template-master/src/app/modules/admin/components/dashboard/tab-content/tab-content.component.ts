@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PmService } from '@app/modules/auth/services/pm.service';
-import { ListTaskViewModel, ListTodoViewModel, ProjectViewModel, TaskViewModel, TodoViewModel } from '@app/modules/core/models/project';
+import { CommentViewModel, ListTaskViewModel, ListTodoViewModel, ProjectViewModel, TaskViewModel, TodoViewModel, UserViewModel } from '@app/modules/core/models/project';
 import { DxPopupComponent, DxValidationGroupComponent } from 'devextreme-angular';
 import notify from 'devextreme/ui/notify';
 import { ConfirmBoxComponent } from './confirm-box/confirm-box.component';
@@ -12,47 +12,42 @@ import { ConfirmBoxComponent } from './confirm-box/confirm-box.component';
 })
 export class TabContentComponent implements OnInit {
   @Input() project: ProjectViewModel;
+  @Input() users: UserViewModel[];
 
   @ViewChild('popupTask') popupTask: DxPopupComponent;
   @ViewChild('validationGroup', { static: false }) validationGroup: DxValidationGroupComponent;
   @ViewChild('confirmBox', { static: false }) confirmBox: ConfirmBoxComponent;
 
   //#region variable
+  commentItem: CommentViewModel;
   taskItem: TaskViewModel;
   selectModel: ListTodoViewModel | TodoViewModel;
 
   isEdit: boolean = false;
+  isVidsibleAddNewCmt = false;
   isVisibleTaskMenu: boolean = false;
 
-  selectStatus: number[];
-  statusTask: object =
-    [
-      { id: 0, text: 'Not Started' },
-      { id: 1, text: 'In Progress' },
-      { id: 2, text: 'Completed' },
-      { id: 3, text: 'Closed' },
-    ];
+  // selectStatus: number[];
+  // statusTask: object =
+  //   [
+  //     { id: 0, text: 'Not Started' },
+  //     { id: 1, text: 'In Progress' },
+  //     { id: 2, text: 'Completed' },
+  //     { id: 3, text: 'Closed' },
+  //   ];
   //#endregion
 
   constructor(
     private pmServive: PmService,
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
   //#region responsive
   showTaskMenu(e): void {
     this.isVisibleTaskMenu = !this.isVisibleTaskMenu;
   }
-  // @HostListener('window:resize', ['$event'])
-  // onResize(event) {
-  //   if (event.target.outerWidth < 992) {
-  //     this.popupTask.fullScreen = true;
-  //   } else {
-  //     this.popupTask.fullScreen = false;
-  //   }
-  // }
-  //#endregion
 
   //#region event drag & drop task
   onTaskDragStart(e) {
@@ -75,7 +70,7 @@ export class TabContentComponent implements OnInit {
     if (!this.validationGroup.instance.validate().isValid) {
       return false;
     }
-    this.taskItem.status = this.selectStatus[0];
+    // this.taskItem.status = this.selectStatus[0];
     if (this.isEdit) {
       this.editTask(this.taskItem);
     } else {
@@ -85,16 +80,31 @@ export class TabContentComponent implements OnInit {
 
   onClickEditTask(task: TaskViewModel) {
     this.isEdit = true;
-    this.selectStatus = [task.status];
+    // this.selectStatus = [task.status];
+    // get Todo & todo item
+    this.pmServive.getTodosByTaskId(task.id).subscribe((item) =>{
+      task.todos = item.data;
+    })
+    // get comment in task
+    this.pmServive.getCommentsByTaskId(task.id).subscribe((item) => {
+      task.comments = item.data;
+    });
+
+    // get member in task
+    this.pmServive.getUserByTaskId(task.id).subscribe((item) => {
+      task.members = item.data;
+    });
+
     this.taskItem = task;
     this.popupTask.instance.show();
   }
+
   editTask(task: TaskViewModel): void {
     this.pmServive.editTask(task).subscribe(
-      () => {
+      item => {
         // task.statusTaskString = this.statusTask[this.selectStatus[0]].text;
-        task.statusTaskString = this.statusTask[task.status].text;
-        this.popupTask.instance.hide();
+        // task.statusTaskString = this.statusTask[task.status].text;
+        this.notification(item.message, 'success', 3000);
       }
     );
   }
@@ -105,14 +115,14 @@ export class TabContentComponent implements OnInit {
       listTaskId: ltTaskId,
       todos: [],
     });
-    this.selectStatus = [0];
+    // this.selectStatus = [0];
     this.popupTask.instance.show();
   }
   addTask(task: TaskViewModel): void {
     this.pmServive.addTask(task).subscribe(
       item => {
         task.id = item.data;
-        task.statusTaskString = this.statusTask[task.status].text;
+        // task.statusTaskString = this.statusTask[task.status].text;
         this.project.tasks.find(lt => lt.id === task.listTaskId).task.push(task);
 
         this.popupTask.instance.hide();
@@ -203,11 +213,11 @@ export class TabContentComponent implements OnInit {
   onClickConfirm(e) {
     if (e === false)
       return;
-    const nameClass = this.selectModel.constructor.name;console.log(nameClass);
-    if (nameClass === 'ListTodoViewModel'){
+    const nameClass = this.selectModel.constructor.name; console.log(nameClass);
+    if (nameClass === 'ListTodoViewModel') {
       this.deleteLstTodo(<ListTodoViewModel>this.selectModel);
     }
-    if (nameClass === 'TodoViewModel'){
+    if (nameClass === 'TodoViewModel') {
       this.deleteTodo(<TodoViewModel>this.selectModel);
     }
     this.confirmBox.hide();
@@ -284,10 +294,70 @@ export class TabContentComponent implements OnInit {
   }
   //#endregion
 
+  //#region comment
+  onClickNewCmt(): void {
+    this.isVidsibleAddNewCmt = true;
+    this.commentItem = new CommentViewModel({
+      userId: 10,
+      parentId: null,
+      taskId: this.taskItem.id,
+      inverseParent: [],
+    });
+  }
+  onClickRepComment(comment: CommentViewModel): void {
+    this.commentItem = new CommentViewModel({
+      userId: 10,
+      parentId: comment.id,
+      taskId: this.taskItem.id,
+      inverseParent: [],
+    });
+    comment.isRep = true;
+  }
+  addComment(e: CommentViewModel): void {
+    // Cancel edit
+    this.isVidsibleAddNewCmt = false;
+    if (e.isEdit === false) {
+      return;
+    }
+    // Add New comment
+    this.pmServive.addComment(e).subscribe(item => {
+      e.id = item.data;
+      e.isEdit = false;
+      this.setUserName(e);
+      this.setUserImg(e);
+      this.taskItem.comments.push(e);
+    })
+  }
+
+  addRepComment(e: CommentViewModel): void {
+    let commentParent = this.taskItem.comments.find(cmt => cmt.id === e.parentId)
+    commentParent.isRep = false;
+    if (e.isEdit === false) {
+      return;
+    }
+    this.pmServive.addComment(e).subscribe(item => {
+      e.id = item.data;
+      e.isEdit = false;
+      this.setUserName(e);
+      this.setUserImg(e);
+      commentParent.inverseParent.push(e);
+    })
+  }
+
+  editComment(e: CommentViewModel): void {
+    if (e.isEdit === false) {
+      return;
+    }
+    this.pmServive.editComment(e).subscribe(() => {
+      e.isEdit = false;
+    });
+  }
+  //#endregion
+
   //#region private funtion
   private setPercent(listTodoId: number): void {
     const lsTodo = this.taskItem.todos.find(x => x.id === listTodoId); // type listTodoViewModel
-    if(lsTodo.todo.length !== 0)
+    if (lsTodo.todo.length !== 0)
       lsTodo.percent = lsTodo.todo.filter(x => x.isComplete === true).length * 100 / lsTodo.todo.length;
     else
       lsTodo.percent = 0;
@@ -301,6 +371,13 @@ export class TabContentComponent implements OnInit {
         at: 'center bottom'
       }
     }, type, time);
+  }
+
+  private setUserName(comment: CommentViewModel): void {
+    comment.userName = "TL";
+  }
+  private setUserImg(comment: CommentViewModel): void {
+    comment.img = "/assets/images/img.jpg";
   }
   //#endregion
 }

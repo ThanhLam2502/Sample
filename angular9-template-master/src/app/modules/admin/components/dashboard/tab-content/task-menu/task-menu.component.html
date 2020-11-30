@@ -4,7 +4,8 @@
     (click)="showPopoverTodo($event)">
   </dx-button>
 
-  <dx-button class="add-to-task-button" text="Member" icon="user" type="default">
+  <dx-button class="add-to-task-button" id="member" text="Member" icon="user" type="default"
+    (click)="showPopoverMember($event)">
   </dx-button>
 
   <dx-button id="status" class="add-to-task-button" text="Status" icon="tags" type="default"
@@ -33,7 +34,16 @@
   <div *dxTemplate="let data = model of 'content'">
     <p class="btn-title-add-to-task">Status</p>
     <dx-list [dataSource]="statusTask" selectionMode="single" [showSelectionControls]="true"
-      [(selectedItemKeys)]="selectStatus" keyExpr="id">
+      [(selectedItemKeys)]="selectStatus" keyExpr="id" valueExpr="name" displayExpr="name">
+    </dx-list>
+  </div>
+</dx-popover>
+
+<dx-popover #popoverAssignMember target="#member" position="bottom" [width]="200">
+  <div *dxTemplate="let data = model of 'content'">
+    <p class="btn-title-add-to-task">Member</p>
+    <dx-list #dxListMember [dataSource]="users" selectionMode="multiple" [showSelectionControls]="true" [searchEnabled]="true" searchExpr="name"
+      keyExpr="id" valueExpr="name" displayExpr="name" [(selectedItemKeys)]="selectUser">
     </dx-list>
   </div>
 </dx-popover>

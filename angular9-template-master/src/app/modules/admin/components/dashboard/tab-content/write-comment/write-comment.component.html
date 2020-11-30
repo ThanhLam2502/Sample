@@ -1,4 +1,4 @@
-<dx-html-editor valueType="html" height="120">
+<dx-html-editor #writeCmt valueType="html" height="120" [value]="comment?.cmt">
   <dxo-toolbar (multiline)="true">
     <dxi-item formatName="bold"></dxi-item>
     <dxi-item formatName="italic"></dxi-item>
@@ -20,3 +20,7 @@
     </dxi-item>
   </dxo-toolbar>
 </dx-html-editor>
+<div class="btn-write-comment">
+    <button type="button" class="btn btn-outline-primary btn-md m-1" (click)="onClickBtnYes()">Yes</button>
+    <button type="button" class="btn btn-outline-dark btn-md m-1" (click)="onClickBtnNo()">No</button>
+</div>

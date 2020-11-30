@@ -10,9 +10,11 @@ namespace Sample.APIs.Configurations
         {
             CreateMap<ProjectTaskViewModel, Project>().ReverseMap();
             CreateMap<ListTaskViewModel, ListTask>().ReverseMap();
-            CreateMap<TaskViewModel, ProjectTask>().ReverseMap();
+            CreateMap<TaskViewModel, TaskProject>().ReverseMap();
             CreateMap<ListTodoViewModel, ListTodo>().ReverseMap();
             CreateMap<TodoViewModel, Todo>().ReverseMap();
+            CreateMap<CommentViewModel, Comment>().ReverseMap();
+            CreateMap<UserViewModel, User>().ReverseMap();
         }
 
     }

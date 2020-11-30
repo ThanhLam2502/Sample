@@ -3,7 +3,7 @@
     <ng-template mat-tab-label>{{ item.name }}</ng-template>
     <!-- PROJECT CONTENT -->
     <ng-template matTabContent>
-      <app-tab-content [project]="item"></app-tab-content>
+      <app-tab-content [project]="item" [users]="users"></app-tab-content>
     </ng-template>
     <!-- END PROJECT CONTENT -->
   </mat-tab>
@@ -67,7 +67,6 @@
       <dxo-selection mode="single"></dxo-selection>
       <dxo-load-panel [enabled]="true"></dxo-load-panel>
       <dxo-paging [pageSize]="10"></dxo-paging>
-
 
       <dxi-column dataField="id" [allowEditing]="false" sortOrder="asc" [width]="50">
       </dxi-column>

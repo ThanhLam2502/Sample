@@ -2,8 +2,7 @@ import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
 import { PmService } from '@app/modules/auth/services/pm.service';
-import { ProjectViewModel } from '@app/modules/core/models/project';
-import { UserViewModel } from '@app/modules/core/models/user';
+import { ProjectViewModel, UserViewModel } from '@app/modules/core/models/project';
 import { DxPopoverComponent } from 'devextreme-angular';
 import { DxFormComponent } from 'devextreme-angular/ui/form';
 import notify from 'devextreme/ui/notify';
@@ -55,7 +54,9 @@ export class DashboardComponent implements OnInit {
   }
 
   getUsers(): void {
-    this.pmServive.getUsers().subscribe((item) => (this.users = item));
+    this.pmServive.getUsers().subscribe((item) => {
+      this.users = item.data
+    });
   }
 
   dblSelectTabProject(e): void {
@@ -84,7 +85,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  addProject(project : ProjectViewModel): void {
+  addProject(project: ProjectViewModel): void {
     this.pmServive.addProject(project).subscribe((item) => {
       this.project.id = item.data;
       this.projects.push(project);

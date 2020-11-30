@@ -44,6 +44,7 @@ namespace Sample.APIs
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ITodoService, TodoService>();
+            services.AddScoped<ICommentService, CommentService>();
             //END SERVICE
 
             #region auto mapper

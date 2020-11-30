@@ -17,6 +17,13 @@ namespace Sample.APIs.Controllers
             _todoService = todoService;
         }
 
+        // GET: api/todos/0
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetTodosByTaskID([FromRoute] int id)
+        {
+            var response = await _todoService.GetTodosByTaskID(id);
+            return StatusCode(response);
+        }
         // POST api/todos
         [HttpPost]
         public async Task<IActionResult> InsertListTodo([FromBody] ListTodoViewModel model)

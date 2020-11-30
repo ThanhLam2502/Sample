@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Sample.Services
 {
-    public class TaskService : BaseService<ProjectTask>, ITaskService
+    public class TaskService : BaseService<TaskProject>, ITaskService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -28,7 +28,7 @@ namespace Sample.Services
 
         public async Task<HttpResponse<int>> InsertTask(TaskViewModel model)
         {
-            var task = _mapper.Map<ProjectTask>(model);
+            var task = _mapper.Map<TaskProject>(model);
             await Repository.InsertAsync(task);
             return HttpResponse<int>.OK(task.Id, Messages.ItemInserted);
         }

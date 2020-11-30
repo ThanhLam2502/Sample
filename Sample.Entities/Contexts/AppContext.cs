@@ -41,15 +41,18 @@ namespace Sample.Entities.Models
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Comment1)
-                    .HasColumnName("Comment")
-                    .HasColumnType("ntext");
+                entity.Property(e => e.Cmt).HasColumnType("ntext");
 
                 entity.Property(e => e.ParentId).HasColumnName("ParentID");
 
                 entity.Property(e => e.TaskId).HasColumnName("TaskID");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Parent)
+                    .WithMany(p => p.InverseParent)
+                    .HasForeignKey(d => d.ParentId)
+                    .HasConstraintName("FK_Comment_Comment");
 
                 entity.HasOne(d => d.Task)
                     .WithMany(p => p.Comment)

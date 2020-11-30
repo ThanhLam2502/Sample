@@ -264,15 +264,8 @@
   }
 }
 
-.comment {
-  width: 100%;
-
-  &:hover {
-    background-color: whitesmoke;
-  }
-}
-.show-comment{
-  margin-left: 1rem;
+.show-comment {
+  margin-left: 1.5rem;
   margin-top: 5px;
   border-radius: 2px;
 
@@ -281,15 +274,39 @@
     font-family: ui-monospace;
     font-weight: bold;
   }
-  .user-comment{
-    padding: 8px 8px;
-    margin-left: 1rem;
-    padding-right: 1rem;
+  .user-comment {
+    padding: 8px 8px 2px;
+    margin-left: 1.5rem;
+    padding-right: 2rem;
     width: 100%;
 
     &:hover {
       background-color: whitesmoke;
     }
   }
-}
+  .small-link {
+    margin: 0 2rem;
+    color: blue;
 
+    .link-click {
+      margin: 0rem 0.5rem;
+    }
+  }
+  .flex-center {
+    display: flex;
+    align-items: center;
+  }
+}
+.task-comment {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.border-radius-50 {
+  border-radius: 50%;
+}
+.member {
+  .member-img {
+    display: flex;
+    align-items: center;
+  }
+}

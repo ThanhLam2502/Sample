@@ -1,13 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Collections.Generic;
 using Sample.Entities.Utilities;
 
 namespace Sample.Entities.ViewModels
 {
-
-
     public class ProjectTaskViewModel
     {
         public int Id { get; set; }
@@ -36,7 +33,9 @@ namespace Sample.Entities.ViewModels
         public int? Status { get; set; }
         public string StatusTaskString => ((StatusTask)Status).GetDescription();
         public int? ListTaskId { get; set; }
+        public IEnumerable<UserViewModel> Members { get; set; }
         public IEnumerable<ListTodoViewModel> Todos { get; set; }
+        public IEnumerable<CommentViewModel> Comments { get; set; }
     }
     public class ListTodoViewModel
     {
@@ -52,6 +51,26 @@ namespace Sample.Entities.ViewModels
         public string Name { get; set; }
         public bool? IsComplete { get; set; }
         public int? ListTodoId { get; set; }
+
+    }
+
+    public class CommentViewModel
+    {
+        public int Id { get; set; }
+        public string Cmt { get; set; }
+        public int? UserId { get; set; }
+        public string UserName { get; set; }
+        public string Img { get; set; }
+        public int? TaskId { get; set; }
+        public int? ParentId { get; set; }
+        public IEnumerable<CommentViewModel> InverseParent { get; set; }
+    }
+
+    public class UserViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Img { get; set; }
 
     }
 }

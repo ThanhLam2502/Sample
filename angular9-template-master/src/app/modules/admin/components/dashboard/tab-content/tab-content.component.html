@@ -20,10 +20,12 @@
         <dx-sortable class="sortable-cards" group="cardsGroup" handle=".can-drag" [data]="lsTask"
           (onDragStart)="onTaskDragStart($event)" (onReorder)="onTaskDrop($event)" (onAdd)="onTaskDrop($event)">
 
-          <div class="card can-drag dx-card dx-theme-text-color dx-theme-background-color"
-            (click)="onClickEditTask(task)" *ngFor="let task of lsTask.task">
-            <div class="card-subject">{{ task.name }}</div>
-            <div class="card-assignee">{{ task.statusTaskString }}</div>
+          <div *ngFor="let task of lsTask.task">
+            <div class="card can-drag dx-card dx-theme-text-color dx-theme-background-color"
+              (click)="onClickEditTask(task)">
+              <div class="card-subject">{{ task.name }}</div>
+              <div class="card-assignee">{{ task.statusTaskString }}</div>
+            </div>
           </div>
 
           <div id="addTask" class="card dx-card dx-theme-text-color dx-theme-background-color"
@@ -75,6 +77,12 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="body mt-3">
+                  <div class="member">
+                    <p><b>Member: </b></p>
+                    <div class="member-img ml-3">
+                        <img [src]="member.img" [width]="24" [height]="24" alt="img" class="border-radius-50 ml-1" *ngFor="let member of taskItem.members">
+                    </div>
+                  </div>
                   <p><b>Description</b></p>
                   <dx-html-editor valueType="html" height="209" [(value)]="taskItem.description">
                     <dxo-toolbar (multiline)="true">
@@ -180,32 +188,51 @@
               <div class="col-md-12">
                 <div class="write-comment">
                   <p><b>Comment</b></p>
-                  <div class="py-2 my-2 comment">Write an comment... </div>
-                  <app-write-comment></app-write-comment>
+                  <div class="py-2 my-2 w-100" *ngIf="!isVidsibleAddNewCmt;" (click)="onClickNewCmt()">
+                    Write an comment...
+                  </div>
+                  <div *ngIf="isVidsibleAddNewCmt;">
+                    <app-write-comment [comment]="commentItem" (onCommentChange)="addComment($event)">
+                    </app-write-comment>
+                  </div>
                 </div>
 
-                <div class="show-comment ml-0 pt-2">
-                  <div class="name-user">TL</div>
-                  <div class="user-comment">aaaaaaaaaaaa</div>
-                  <div class="user-comment">
-                    <app-write-comment ></app-write-comment>
-                  </div>
-
-                  <div class="show-comment">
-                    <div class="name-user">TL</div>
-                    <div class="user-comment">aaaaaaaaaaaa</div>
-                    <div class="user-comment">
-                      <app-write-comment ></app-write-comment>
+                <div class="task-comment">
+                  <div class="show-comment ml-0 pt-2" *ngFor="let comment of taskItem.comments">
+                    <div class="flex-center">
+                      <img [src]="comment.img" [width]="24" [height]="24" alt="img" class="border-radius-50 mr-1">
+                      <div class="name-user">{{ comment.userName }}</div>
+                    </div>
+                    <div class="user-comment" *ngIf="!comment.isEdit" [innerHTML]="comment.cmt"></div>
+                    <h5 class="small-link">
+                      <span class="link-click" (click)="onClickRepComment(comment)">Reply</span>
+                      <span class="link-click" (click)="comment.isEdit = true">Edit</span>
+                      <span class="link-click">Delete</span>
+                    </h5>
+                    <div class="user-comment" *ngIf="comment.isEdit">
+                      <app-write-comment [comment]="comment" (onCommentChange)="editComment($event)">
+                      </app-write-comment>
                     </div>
 
-                    <div class="show-comment">
-                      <div class="name-user">TL</div>
-                      <div class="user-comment">aaaaaaaaaaaa</div>
-                      <div class="user-comment">
-                        <app-write-comment ></app-write-comment>
+                    <div class="show-comment" *ngFor="let repCmt of comment.inverseParent">
+                      <div class="flex-center">
+                        <img [src]="repCmt.img" [width]="24" [height]="24" alt="img" class="border-radius-50 mr-1">
+                        <div class="name-user">{{ repCmt.userName }}</div>
                       </div>
+                      <div class="user-comment" [innerHTML]="repCmt.cmt"></div>
+                      <h5 class="small-link">
+                        <span class="link-click" (click)="repCmt.isEdit = true">Edit</span>
+                        <span class="link-click">Delete</span>
+                      </h5>
+                      <div class="user-comment" *ngIf="repCmt.isEdit">
+                        <app-write-comment [comment]="repCmt" (onCommentChange)="editComment($event)">
+                        </app-write-comment>
+                      </div>
+                    </div>
 
-
+                    <div class="user-comment" *ngIf="comment?.isRep">
+                      <app-write-comment [comment]="commentItem" (onCommentChange)="addRepComment($event)">
+                      </app-write-comment>
                     </div>
                   </div>
                 </div>
@@ -217,19 +244,22 @@
         <!-- End col-9 -->
         <!-- Col-3 -->
         <div class="col-md-3">
-          <app-task-menu [isEdit]="isEdit" [statusTask]="statusTask" [(selectStatus)]="selectStatus"
+          <app-task-menu [isEdit]="isEdit" [users]="users" [(task)]="taskItem"
             (onSubmitedTask)="submitTask()" (addLstTodoTask)="addLstTodo($event)"></app-task-menu>
         </div>
+        <!-- <div class="col-md-3">
+          <app-task-menu [isEdit]="isEdit" [statusTask]="statusTask" [(selectStatus)]="selectStatus" [users]="users" [(task)]="taskItem"
+            (onSubmitedTask)="submitTask()" (addLstTodoTask)="addLstTodo($event)"></app-task-menu>
+        </div> -->
         <!-- End col-3 -->
       </div>
       <!-- End row 2 -->
     </div>
-    <div class="task-menu-md" [class.d-block]="isVisibleTaskMenu">
+    <!-- <div class="task-menu-md" [class.d-block]="isVisibleTaskMenu">
       <app-task-menu [isEdit]="isEdit" [statusTask]="statusTask" [(selectStatus)]="selectStatus"
         (onSubmitedTask)="submitTask()" (addLstTodoTask)="addLstTodo($event)"></app-task-menu>
-    </div>
+    </div> -->
   </div>
-
 </dx-popup>
 
 <app-confirm-box #confirmBox (onConfirm)="onClickConfirm($event)"></app-confirm-box>

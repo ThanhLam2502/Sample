@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// tslint:disable-next-line: max-line-length
-import { BaseResponse, ListTaskViewModel, ListTodoViewModel, ProjectViewModel, TaskViewModel, TodoViewModel } from '@app/modules/core/models/project';
-import { UserViewModel } from '@app/modules/core/models/user';
+import {
+  BaseResponse, CommentViewModel, ListTaskViewModel, ListTodoViewModel,
+  ProjectViewModel, TaskViewModel, TodoViewModel, UserViewModel
+} from '@app/modules/core/models/project';
 import { ApiService } from '@app/modules/core/services';
 import { Observable } from 'rxjs';
 
@@ -14,6 +14,7 @@ export class PmService {
   usertUrl = 'api/users';
   taskUrl = 'api/tasks';
   todoUrl = 'api/todos';
+  commentUrl = 'api/comments'
 
   constructor(
     private apiService: ApiService,
@@ -38,10 +39,13 @@ export class PmService {
   }
 
 
-  getUsers(): Observable<UserViewModel[]> {
+  getUsers(): Observable<BaseResponse<UserViewModel[]>> {
     return this.apiService.get(this.usertUrl);
   }
-
+  getUserByTaskId(id: number): Observable<BaseResponse<UserViewModel[]>> {
+    const url = `${this.usertUrl}/task/${id}`
+    return this.apiService.get(url);
+  }
 
   addTask(task: TaskViewModel): Observable<BaseResponse<number>> {
     const url = `${this.taskUrl}/task`;
@@ -79,11 +83,15 @@ export class PmService {
   }
 
 
+  getTodosByTaskId(id: number): Observable<BaseResponse<ListTodoViewModel[]>> {
+    const url = `${this.todoUrl}/${id}`;
+    return this.apiService.get(url);
+  }
+
   addTodo(todo: TodoViewModel): Observable<BaseResponse<number>> {
     const url = `${this.todoUrl}/todo`;
     return this.apiService.post(url, todo);
   }
-
   editTodo(todo: TodoViewModel): Observable<BaseResponse<number>> {
     const url = `${this.todoUrl}/todo/${todo.id}`;
     return this.apiService.update(url, todo);
@@ -91,5 +99,20 @@ export class PmService {
   delTodo(id: number): Observable<BaseResponse<number>> {
     const url = `${this.todoUrl}/todo/${id}`;
     return this.apiService.delete(url);
+  }
+
+  getComments(): Observable<BaseResponse<CommentViewModel[]>> {
+    return this.apiService.get(this.commentUrl);
+  }
+  getCommentsByTaskId(id: number): Observable<BaseResponse<CommentViewModel[]>> {
+    const url = `${this.commentUrl}/task/${id}`;
+    return this.apiService.get(url);
+  }
+  addComment(comment: CommentViewModel): Observable<BaseResponse<number>> {
+    return this.apiService.post(this.commentUrl, comment);
+  }
+  editComment(comment: CommentViewModel): Observable<BaseResponse<number>> {
+    const url = `${this.commentUrl}/${comment.id}`;
+    return this.apiService.update(url, comment);
   }
 }

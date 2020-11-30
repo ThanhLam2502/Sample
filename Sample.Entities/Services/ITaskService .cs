@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sample.Entities.Services
 {
-    public interface ITaskService : IBaseService<ProjectTask>
+    public interface ITaskService : IBaseService<TaskProject>
     {
         Task<HttpResponse<int>> InsertTask(TaskViewModel model);
         Task<HttpResponse<int>> UpdateTask(TaskViewModel model, int id);

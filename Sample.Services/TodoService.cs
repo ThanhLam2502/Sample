@@ -7,6 +7,7 @@ using Sample.Entities.Services;
 using Sample.Entities.UnitOfWork;
 using Sample.Entities.ViewModels;
 using Sample.Repositories;
+using Sample.Repositories.Repostitory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,14 @@ namespace Sample.Services
             return HttpResponse<int>.OK(id, Messages.ItemDeleted);
         }
 
+
+        public Task<HttpResponse<List<ListTodoViewModel>>> GetTodosByTaskID(int taskId)
+        {
+            var repos = _unitOfWork.Repository<ListTodo>();
+            var todos = repos.GetTodosByTaskID(taskId);
+            return todos;
+
+        }
         public async Task<HttpResponse<int>> InsertListTodo(ListTodoViewModel model)
         {
             var repos = _unitOfWork.Repository<ListTodo>();
@@ -97,5 +106,6 @@ namespace Sample.Services
 
             return HttpResponse<int>.Error(Messages.ActionFailed, statusCode: System.Net.HttpStatusCode.BadRequest);
         }
+
     }
 }
