@@ -82,13 +82,11 @@ export class TabContentComponent implements OnInit {
     this.pmServive.getUserByTaskId(task.id).subscribe((item) => {
       task.members = item.data;
     });
-
     this.taskItem = task;
     this.popupTask.instance.show();
   }
 
   editTask(task: TaskViewModel): void {
-    console.log(this.taskItem);
     this.pmServive.editTask(task).subscribe(
       item => {
         this.notification(item.message, 'success', 3000);

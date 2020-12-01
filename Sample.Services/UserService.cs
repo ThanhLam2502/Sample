@@ -28,10 +28,10 @@ namespace Sample.Services
             var users = await Repository.GetAllUsers();
             return users;
         }
-        public async Task<HttpResponse<List<UserViewModel>>> GetUsersById(int taskId)
+        public async Task<HttpResponse<List<UserViewModel>>> GetUsersByTaskId(int taskId)
         {
             var repos = _unitOfWork.Repository<TaskProject>();
-            var users = await repos.GetUsersById(taskId);
+            var users = await repos.GetUsersByTaskId(taskId);
             return users;
         }
     }

@@ -17,13 +17,6 @@ namespace Sample.APIs.Controllers
             _commentService = commentService;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetComment()
-        //{
-        //    var response = await _commentService.GetComments();
-        //    return StatusCode(response);
-        //}
-
         // GET: api/comments/0
         [HttpGet("task/{id:int}")]
         public async Task<IActionResult> GetCommentByTaskID([FromRoute]int id)    
@@ -40,14 +33,14 @@ namespace Sample.APIs.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateCmtContent([FromBody] CommentViewModel model, int id)
+        public async Task<IActionResult> UpdateCmtContent([FromBody] CommentViewModel model,[FromRoute] int id)
         {
             var response = await _commentService.UpdateCmtContent(model, id);
             return StatusCode(response);
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteComment(int id)
+        public async Task<IActionResult> DeleteComment([FromRoute] int id)
         {
             var response = await _commentService.DeleteComment(id);
             return StatusCode(response);

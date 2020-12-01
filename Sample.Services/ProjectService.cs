@@ -63,7 +63,6 @@ namespace Sample.Services
             project.EndDate = model.EndDate;
             project.AssignTo = model.AssignTo;
             project.Status = model.Status;
-
             int saved = await _unitOfWork.SaveChangesAsync();
 
             if (saved > 0)

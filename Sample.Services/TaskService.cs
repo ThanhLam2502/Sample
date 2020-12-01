@@ -7,6 +7,7 @@ using Sample.Entities.Services;
 using Sample.Entities.UnitOfWork;
 using Sample.Entities.ViewModels;
 using Sample.Repositories;
+using Sample.Repositories.Repostitory;
 using System;
 using System.Collections.Generic;
 using System.Linq;

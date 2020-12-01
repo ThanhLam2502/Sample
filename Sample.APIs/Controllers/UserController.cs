@@ -28,7 +28,7 @@ namespace Sample.APIs.Controllers
         [HttpGet("task/{id:int}")]
         public async Task<IActionResult> GetUsersByTaskId([FromRoute] int id)
         {
-            var response = await _userService.GetUsersById(id);
+            var response = await _userService.GetUsersByTaskId(id);
             return StatusCode(response);
         }
     }

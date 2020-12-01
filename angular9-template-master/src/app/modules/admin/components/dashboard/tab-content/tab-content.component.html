@@ -59,6 +59,7 @@
                   </dxi-validation-rule>
                 </dx-validator>
               </dx-text-box>
+
               <a class="icon px-3 py-2" (click)="showTaskMenu($event)">
                 <i class="fa fa-bars custom-fa-bars"></i>
               </a>
@@ -81,7 +82,7 @@
                     <p><b>Member: </b></p>
                     <div class="member-img ml-3">
                       <img [src]="member.img" [width]="24" [height]="24" alt="img" class="border-radius-50 ml-1"
-                        *ngFor="let member of taskItem.members">
+                        *ngFor="let member of taskItem?.members">
                     </div>
                   </div>
                   <p><b>Description</b></p>

@@ -32,12 +32,6 @@ namespace Sample.Services
             var comments = Repository.GetCommentByTaskID(taskId);
             return comments;
         }
-    
-        public Task<HttpResponse<IEnumerable<CommentViewModel>>> GetComments()
-        {
-            var cmt = Repository.GetComments();
-            return cmt;
-        }
 
         public async Task<HttpResponse<int>> InsertComment(CommentViewModel model)
         {

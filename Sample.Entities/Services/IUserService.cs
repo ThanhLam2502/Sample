@@ -11,6 +11,6 @@ namespace Sample.Entities.Services
     public interface IUserService : IBaseService<User>
     {
         Task<HttpResponse<List<UserViewModel>>> GetAllUsers();
-        Task<HttpResponse<List<UserViewModel>>> GetUsersById(int taskId);
+        Task<HttpResponse<List<UserViewModel>>> GetUsersByTaskId(int taskId);
     }
 }

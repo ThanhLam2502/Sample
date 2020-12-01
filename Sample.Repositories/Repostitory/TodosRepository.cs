@@ -35,19 +35,3 @@ namespace Sample.Repositories.Repostitory
         }
     }
 }
-
-//Todos = task.ListTodo
-//.Where(todos => todos.IsDeleted != true)
-//.Select(todos => new ListTodoViewModel
-//{
-//    Id = todos.Id,
-//    Name = todos.Name,
-//    TaskId = todos.TaskId,
-//    Todo = todos.Todo.Select(todo => new TodoViewModel
-//    {
-//        Id = todo.Id,
-//        Name = todo.Name,
-//        IsComplete = todo.IsComplete,
-//        ListTodoId = todo.ListTodoId,
-//    })
-//})

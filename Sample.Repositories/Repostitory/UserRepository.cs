@@ -25,10 +25,12 @@ namespace Sample.Repositories.Repostitory
 
             return HttpResponse<List<UserViewModel>>.OK(query);
         }
-        public static async Task<HttpResponse<List<UserViewModel>>> GetUsersById(this IRepository<TaskProject> repository, int taskId)
+        public static async Task<HttpResponse<List<UserViewModel>>> GetUsersByTaskId(this IRepository<TaskProject> repository, int taskId)
         {
             var query = await repository.Entities
-               .SelectMany(t => t.TaskUser).Select(tu => new UserViewModel
+               .SelectMany(t => t.TaskUser)
+               .Where(tu => tu.TaskId == taskId)
+               .Select(tu => new UserViewModel
                {
                    Id = tu.User.Id,
                    Name = tu.User.Name,
