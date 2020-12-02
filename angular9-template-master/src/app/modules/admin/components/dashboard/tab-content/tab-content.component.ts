@@ -1,7 +1,8 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { PmService } from '@app/modules/auth/services/pm.service';
 import { CommentViewModel, ListTaskViewModel, ListTodoViewModel, ProjectViewModel, TaskViewModel, TodoViewModel, UserViewModel } from '@app/modules/core/models/project';
 import { DxPopupComponent, DxValidationGroupComponent } from 'devextreme-angular';
+import { confirm } from 'devextreme/ui/dialog';
 import notify from 'devextreme/ui/notify';
 import { ConfirmBoxComponent } from './confirm-box/confirm-box.component';
 
@@ -69,7 +70,6 @@ export class TabContentComponent implements OnInit {
   }
 
   onClickEditTask(task: TaskViewModel) {
-    this.isEdit = true;
     // get Todo & todo item
     this.pmServive.getTodosByTaskId(task.id).subscribe((item) => {
       task.todos = item.data;
@@ -140,6 +140,7 @@ export class TabContentComponent implements OnInit {
     setTimeout(() => {
       inputElement.focus();
     }, 100);
+
   }
   editLstTodoName(e, lsTodo): void {
     if (e.target.value === '' || lsTodo.name === e.target.value) {

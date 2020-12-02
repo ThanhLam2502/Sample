@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sample.Entities.Models;
 using Sample.Entities.Services;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sample.APIs.Controllers

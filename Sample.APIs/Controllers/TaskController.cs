@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sample.Entities.Resources;
 using Sample.Entities.Services;
 using Sample.Entities.ViewModels;
 using System.Threading.Tasks;
